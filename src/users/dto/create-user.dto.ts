@@ -1,14 +1,37 @@
 //import {RoleEntity} from "../../roles/entity/role.entity";
 
+import {
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { CreateRoleDto } from '../../roles/dto/create-role.dto';
+import { Type } from 'class-transformer';
+import { User } from '../entity/user.entity';
+import { RoleEntity } from '../../roles/entity/role.entity';
+
 export class CreateUserDto {
-    id: number;
-    email: string
-    firstName: string;
-    lastName: string;
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 
-    createdDate: Date;
-    lastModified?: Date;
-    active?: boolean;
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
 
-    roleId: number;
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+
+  @IsNumber()
+  roleId: number;
 }
