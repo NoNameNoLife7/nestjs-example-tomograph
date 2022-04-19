@@ -33,11 +33,209 @@ model user {
 
   active Boolean?  @default(true)
 
-  role role @relation(fields: [roleId], references: [id])
   roleId Int
+  role   role @relation(fields: [roleId], references: [id])
+}
+
+model patient {
+ id    Int     @default(autoincrement()) @id
+ firstName     String @db.VarChar(128)
+ lastName      String @db.VarChar(255)
+ hospitalCode  String? @db.VarChar(128)
+ comorbidities String? @db.VarChar(256)
+ diagnostic    String? @db.VarChar(128)
+ active        Boolean?  @default(true)
+ weight        Float?
+ size          Float?
+
+ sex       Sex  @default(U)
+ skinColor SkinColor @default(U)
+
+ createdDate DateTime @default(now())
+ lastModified DateTime? @updatedAt
+
+ tests test[]
+}
+
+model softwareConfiguration {
+  id    Int     @default(autoincrement()) @id
+
+  dateTime DateTime? @default(now())
+  brightness Float?
+
+  language Language @default(ES)
+
+  createdDate  DateTime @default(now())
+  lastModified DateTime? @updatedAt
+
+  tests test[]
+}
+
+model ventilator {
+  id    Int     @default(autoincrement()) @id
+
+  name         String @db.VarChar(256)
+  model        String? @db.VarChar(256)
+  protocol     String? @db.VarChar(256)
+
+  createdDate  DateTime @default(now())
+  lastModified DateTime? @updatedAt
+
+  tests test[]
+}
+
+model log {
+  id Int @id @default(autoincrement())
+
+  noEvent Int?
+  comment String?
+  date    DateTime
+
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
+
+  eventId Int?
+  event   event? @relation(fields: [eventId], references: [id])
+
+  testId Int
+  test   test @relation(fields: [testId], references: [id])
+}
+
+model image {
+  id        Int       @id @default(autoincrement())
+  date      DateTime?
+  directory Json[]
+  file      String?
+
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
+
+  testId Int
+  test   test @relation(fields: [testId], references: [id])
+}
+
+model equipmentConfiguration {
+  id                 Int       @id @default(autoincrement())
+  adjacent           Boolean?  @default(true)
+  injectionFrequency Float?
+  SamplingRate       Float?
+  direction          Direction
+  jump               Int?      @default(0)
+
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
+
+  tests test[]
+}
+
+model comunication {
+  id       Int     @id @default(autoincrement())
+  protocol String?
+  version  String?
+
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
+}
+
+model event {
+  id Int @id @default(autoincrement())
+
+  active      Boolean?  @default(true)
+  event       String    @unique
+  description String?
+
+  eventType   EventType @default(OtroEventoQueSeConsidereDeInteres)
+
+  logs log[]
+
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
 }
 
 model test {
- id    Int     @default(autoincrement()) @id
- name String   @db.VarChar(128)
+  id    Int     @default(autoincrement()) @id
+
+  startDate DateTime @default(now())
+  endDate   DateTime @default(now())
+  inclination Int
+  peep        Int?
+  createdDate  DateTime @default(now())
+  lastModified DateTime? @updatedAt
+  directory Json[]
+  file String?
+  position PatientPosition
+
+  records record[]
+  logs log[]
+  images image[]
+
+  patientId Int?
+  patient   patient? @relation(fields: [patientId], references: [id])
+
+  ventilatorId Int?
+  ventilator   ventilator? @relation(fields: [ventilatorId], references: [id])
+
+  softwareConfigurationId Int
+  softwareConfiguration   softwareConfiguration @relation(fields: [softwareConfigurationId], references: [id])
+
+  equipmentConfigurationId Int
+  equipmentConfiguration   equipmentConfiguration @relation(fields: [equipmentConfigurationId], references: [id])
+}
+
+
+model record {
+  id    Int     @default(autoincrement()) @id
+
+  startDate DateTime @default(now())
+  endDate   DateTime @default(now())
+
+  createdDate  DateTime @default(now())
+  lastModified DateTime? @updatedAt
+
+  testId Int
+  test test @relation(fields: [testId], references: [id])
+}
+
+enum SkinColor {
+  U
+  W
+  B
+}
+
+enum Sex {
+  U
+  M
+  F
+}
+
+enum Language {
+  ES
+  EN
+}
+
+enum Direction {
+  IZQ_DER
+  DER_IZQ
+}
+
+enum PatientPosition {
+  BocaArriba
+  BocaAbajo
+  DePie
+  LateralDerecho
+  LateralIzquierdo
+  Sentado
+}
+
+enum EventType {
+  Respiratorio
+  Cardiocirculatorios
+  Otros
+  Procederes
+  VentilacionMecanica
+  CambiosDeModalidadVentilatoria
+  CambiosPostulares
+  Medicamentos
+  SufractantesPulmonares
+  OtroEventoQueSeConsidereDeInteres
 }
