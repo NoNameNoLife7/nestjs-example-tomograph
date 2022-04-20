@@ -1,19 +1,12 @@
-//import {RoleEntity} from "../../roles/entity/role.entity";
-
 import {
   IsBoolean,
-  IsDate,
   IsEmail,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  ValidateNested,
 } from 'class-validator';
-import { CreateRoleDto } from '../../roles/dto/create-role.dto';
-import { Type } from 'class-transformer';
-import { User } from '../entity/user.entity';
-import { RoleEntity } from '../../roles/entity/role.entity';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateUserDto {
   @IsEmail()
@@ -33,5 +26,8 @@ export class CreateUserDto {
   active?: boolean;
 
   @IsNumber()
+  @IsNotEmpty()
   roleId: number;
 }
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}

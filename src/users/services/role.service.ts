@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { role, Prisma } from '@prisma/client';
+import { CreateRoleDto, UpdateRoleDto } from '../dto/role.dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { role } from '@prisma/client';
 
 @Injectable()
-export class RolesService {
+export class RoleService {
   constructor(private prisma: PrismaService) {}
 
   create(createRoleDto: CreateRoleDto): Promise<role> {

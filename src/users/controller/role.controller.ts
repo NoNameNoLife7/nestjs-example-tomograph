@@ -7,14 +7,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { RolesService } from './roles.service';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import { RoleService } from '../services/role.service';
+import { CreateRoleDto, UpdateRoleDto } from '../dto/role.dto';
 import { role as RoleModel } from '@prisma/client';
 
 @Controller('roles')
-export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+export class RoleController {
+  constructor(private readonly rolesService: RoleService) {}
 
   @Post()
   create(@Body() createRoleDto: CreateRoleDto): Promise<RoleModel> {

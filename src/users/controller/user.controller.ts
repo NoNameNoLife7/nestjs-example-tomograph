@@ -8,15 +8,14 @@ import {
   Delete,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 
 import { user as UserModel } from '@prisma/client';
-import { UsersService } from './users.service';
+import { UserService } from '../services/user.service';
 
 @Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly usersService: UserService) {}
 
   @Post()
   async create(@Body() data: CreateUserDto): Promise<UserModel> {
@@ -29,11 +28,15 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<UserModel | null> {
-    return this.usersService.findOne({ id: Number(id) });
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<UserModel | null | undefined> {
+    return await this.getInstanceOr404(+id);
   }
 
-  private async getInstanceOr404(id: number): Promise<UserModel> {
+  private async getInstanceOr404(
+    id: number,
+  ): Promise<UserModel | null | undefined> {
     const user = await this.usersService.findById(+id);
     if (!user) throw new NotFoundException();
     return user;
