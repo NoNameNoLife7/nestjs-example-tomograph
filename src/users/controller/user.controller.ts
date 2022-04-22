@@ -7,29 +7,29 @@ import {
   Param,
   Delete,
   NotFoundException,
-} from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
+} from "@nestjs/common";
+import { CreateUserDto, UpdateUserDto } from "../dto/user.dto";
 
-import { user as UserModel } from '@prisma/client';
-import { UserService } from '../services/user.service';
+import { user as UserModel } from "@prisma/client";
+import { UserService } from "../services/user.service";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
-  /*@Post()
+  @Post()
   async create(@Body() data: CreateUserDto): Promise<UserModel> {
     return this.usersService.create(data);
-  }*/
+  }
 
   @Get()
-  async findAll() {
-    return this.usersService.findMany({});
+  async findAll(): Promise<UserModel[]> {
+    return this.usersService.findAll();
   }
-  /*
-  @Get(':id')
+
+  @Get(":id")
   async findOne(
-    @Param('id') id: string,
+    @Param("id") id: string,
   ): Promise<UserModel | null | undefined> {
     return await this.getInstanceOr404(+id);
   }
@@ -42,17 +42,17 @@ export class UserController {
     return user;
   }
 
-  @Patch(':id')
+  @Patch(":id")
   async update(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<Promise<UserModel> | null | undefined> {
     if (await this.getInstanceOr404(+id))
       return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<UserModel | null | undefined> {
+  @Delete(":id")
+  async remove(@Param("id") id: string): Promise<UserModel | null | undefined> {
     if (await this.getInstanceOr404(+id)) return this.usersService.remove(+id);
-  }*/
+  }
 }

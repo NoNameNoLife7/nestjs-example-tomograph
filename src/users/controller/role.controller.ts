@@ -6,12 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-} from '@nestjs/common';
-import { RoleService } from '../services/role.service';
-import { CreateRoleDto, UpdateRoleDto } from '../dto/role.dto';
-import { role as RoleModel } from '@prisma/client';
+} from "@nestjs/common";
+import { RoleService } from "../services/role.service";
+import { CreateRoleDto, UpdateRoleDto } from "../dto/role.dto";
+import { role as RoleModel } from "@prisma/client";
 
-@Controller('roles')
+@Controller("roles")
 export class RoleController {
   constructor(private readonly rolesService: RoleService) {}
 
@@ -25,21 +25,21 @@ export class RoleController {
     return this.rolesService.findAll();
   }
 
-  @Get(':id')
-  findById(@Param('id') id: string): Promise<RoleModel | null> {
+  @Get(":id")
+  findById(@Param("id") id: string): Promise<RoleModel | null> {
     return this.rolesService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch(":id")
   update(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Body() updateRoleDto: UpdateRoleDto,
   ): Promise<RoleModel | null> {
     return this.rolesService.update(+id, updateRoleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<RoleModel | null> {
+  @Delete(":id")
+  remove(@Param("id") id: string): Promise<RoleModel | null> {
     return this.rolesService.remove(+id);
   }
 }

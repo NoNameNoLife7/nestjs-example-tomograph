@@ -1,8 +1,7 @@
-/*
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
-import { PrismaService } from '../../prisma/prisma.service';
-import { user, Prisma } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { CreateUserDto, UpdateUserDto } from "../dto/user.dto";
+import { PrismaService } from "../../prisma/prisma.service";
+import { user, Prisma } from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -28,7 +27,7 @@ export class UserService {
     const result = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });
-    console.log('Result', result);
+    console.log("Result", result);
 
     return this.prisma.user.findUnique({
       where: userWhereUniqueInput,
@@ -42,22 +41,4 @@ export class UserService {
   remove(id: number): Promise<user | null> {
     return this.prisma.user.delete({ where: { id: id } });
   }
-}
-*/
-
-import { Injectable } from '@nestjs/common';
-import { BaseService } from '../../common/base.service';
-import { Prisma, user } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
-import { UserTypeMap } from '../typeMap/user.type.map';
-
-@Injectable()
-export class UserService extends BaseService<
-  Prisma.userDelegate<user>,
-  UserTypeMap
-> {
-  constructor(private readonly prisma: PrismaService) {
-    super(prisma.user);
-  }
-  /* added the prisma.user (which is a Prisma.UserDelegate) within the constructor. This is somehow comparable to the repository known from typeorm. It gives access to the underlying methods, like create(), update()*/
 }
