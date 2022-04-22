@@ -17,16 +17,16 @@ import { UserService } from '../services/user.service';
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
-  @Post()
+  /*@Post()
   async create(@Body() data: CreateUserDto): Promise<UserModel> {
     return this.usersService.create(data);
-  }
+  }*/
 
   @Get()
-  async findAll(): Promise<UserModel[]> {
-    return this.usersService.findAll();
+  async findAll() {
+    return this.usersService.findMany({});
   }
-
+  /*
   @Get(':id')
   async findOne(
     @Param('id') id: string,
@@ -54,5 +54,5 @@ export class UserController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<UserModel | null | undefined> {
     if (await this.getInstanceOr404(+id)) return this.usersService.remove(+id);
-  }
+  }*/
 }
