@@ -39,6 +39,7 @@ model user {
 
 model patient {
  id    Int     @default(autoincrement()) @id
+
  firstName     String @db.VarChar(128)
  lastName      String @db.VarChar(255)
  hospitalCode  String? @db.VarChar(128)
@@ -68,10 +69,11 @@ model softwareConfiguration {
   createdDate  DateTime @default(now())
   lastModified DateTime? @updatedAt
 
-  tests test[]
+  test   test @relation(fields: [testId], references: [id])
+  testId Int
 }
 
-model ventilator {
+model fan {
   id    Int     @default(autoincrement()) @id
 
   name         String @db.VarChar(256)
@@ -81,7 +83,8 @@ model ventilator {
   createdDate  DateTime @default(now())
   lastModified DateTime? @updatedAt
 
-  tests test[]
+  testId Int
+  test   test @relation(fields: [testId], references: [id])
 }
 
 model log {
@@ -118,17 +121,19 @@ model equipmentConfiguration {
   id                 Int       @id @default(autoincrement())
   adjacent           Boolean?  @default(true)
   injectionFrequency Float?
-  SamplingRate       Float?
+  samplingRate       Float?
   direction          Direction
   jump               Int?      @default(0)
 
   createdDate  DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
-  tests test[]
+  testId Int
+  test   test @relation(fields: [testId], references: [id])
+
 }
 
-model comunication {
+model communication {
   id       Int     @id @default(autoincrement())
   protocol String?
   version  String?
@@ -172,14 +177,11 @@ model test {
   patientId Int?
   patient   patient? @relation(fields: [patientId], references: [id])
 
-  ventilatorId Int?
-  ventilator   ventilator? @relation(fields: [ventilatorId], references: [id])
+  fan   fan?
 
-  softwareConfigurationId Int
-  softwareConfiguration   softwareConfiguration @relation(fields: [softwareConfigurationId], references: [id])
+  softwareConfiguration   softwareConfiguration?
 
-  equipmentConfigurationId Int
-  equipmentConfiguration   equipmentConfiguration @relation(fields: [equipmentConfigurationId], references: [id])
+  equipmentConfiguration   equipmentConfiguration?
 }
 
 
