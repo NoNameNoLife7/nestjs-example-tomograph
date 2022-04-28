@@ -11,78 +11,78 @@ datasource db {
 }
 
 model role {
- id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
- name  String @unique
+  name String @unique
 
- createdDate  DateTime @default(now())
- lastModified DateTime? @updatedAt
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
 
- users user[]
+  users user[]
 }
 
 model user {
-  id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
-  email     String  @unique
+  email     String @unique
   firstName String @db.VarChar(128)
   lastName  String @db.VarChar(255)
 
-  createDate   DateTime @default(now())
+  createDate   DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
-  active Boolean?  @default(true)
+  active Boolean? @default(true)
 
   roleId Int
   role   role @relation(fields: [roleId], references: [id])
 }
 
 model patient {
- id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
- firstName     String @db.VarChar(128)
- lastName      String @db.VarChar(255)
- hospitalCode  String? @db.VarChar(128)
- comorbidities String? @db.VarChar(256)
- diagnostic    String? @db.VarChar(128)
- active        Boolean?  @default(true)
- weight        Float?
- size          Float?
+  firstName     String   @db.VarChar(128)
+  lastName      String   @db.VarChar(255)
+  hospitalCode  String?  @db.VarChar(128)
+  comorbidities String?  @db.VarChar(256)
+  diagnostic    String?  @db.VarChar(128)
+  active        Boolean? @default(true)
+  weight        Float?
+  size          Float?
 
- sex       Sex  @default(U)
- skinColor SkinColor @default(U)
+  sex       Sex       @default(U)
+  skinColor SkinColor @default(U)
 
- createdDate DateTime @default(now())
- lastModified DateTime? @updatedAt
+  createdDate  DateTime  @default(now())
+  lastModified DateTime? @updatedAt
 
- tests test[]
+  tests test[]
 }
 
 model softwareConfiguration {
-  id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
-  dateTime DateTime? @default(now())
+  dateTime   DateTime? @default(now())
   brightness Float?
 
   language Language @default(ES)
 
-  createdDate  DateTime @default(now())
+  createdDate  DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
-  test   test?
+  test test?
 }
 
 model fan {
-  id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
-  name         String @db.VarChar(256)
-  model        String? @db.VarChar(256)
-  protocol     String? @db.VarChar(256)
+  name     String  @db.VarChar(256)
+  model    String? @db.VarChar(256)
+  protocol String? @db.VarChar(256)
 
-  createdDate  DateTime @default(now())
+  createdDate  DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
-  test  test?
+  test test?
 }
 
 model log {
@@ -126,9 +126,7 @@ model equipmentConfiguration {
   createdDate  DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
-  test   test?
-
-
+  test test?
 }
 
 model communication {
@@ -143,11 +141,11 @@ model communication {
 model event {
   id Int @id @default(autoincrement())
 
-  active      Boolean?  @default(true)
-  event       String    @unique
+  active      Boolean? @default(true)
+  event       String   @unique
   description String?
 
-  eventType   EventType @default(OtroEventoQueSeConsidereDeInteres)
+  eventType EventType @default(OtroEventoQueSeConsidereDeInteres)
 
   logs log[]
 
@@ -156,47 +154,46 @@ model event {
 }
 
 model test {
-  id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
-  startDate DateTime @default(now())
-  endDate   DateTime @default(now())
-  inclination Int
-  peep        Int?
-  createdDate  DateTime @default(now())
-  lastModified DateTime? @updatedAt
-  directory Json[]
-  file String?
-  position PatientPosition
+  startDate    DateTime        @default(now())
+  endDate      DateTime        @default(now())
+  inclination  Int
+  peep         Int?
+  createdDate  DateTime        @default(now())
+  lastModified DateTime?       @updatedAt
+  directory    Json[]
+  file         String?
+  position     PatientPosition
 
   records record[]
-  logs log[]
-  images image[]
+  logs    log[]
+  images  image[]
 
   patient   patient? @relation(fields: [patientId], references: [id])
   patientId Int?
 
   fan   fan? @relation(fields: [fanId], references: [id])
-  fanId Int?
+  fanId Int? @unique
 
   softwareConfiguration   softwareConfiguration @relation(fields: [softwareConfigurationId], references: [id])
-  softwareConfigurationId Int
+  softwareConfigurationId Int                   @unique
 
   equipmentConfiguration   equipmentConfiguration @relation(fields: [equipmentConfigurationId], references: [id])
-  equipmentConfigurationId Int
+  equipmentConfigurationId Int                    @unique
 }
 
-
 model record {
-  id    Int     @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
 
   startDate DateTime @default(now())
   endDate   DateTime @default(now())
 
-  createdDate  DateTime @default(now())
+  createdDate  DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
   testId Int
-  test test @relation(fields: [testId], references: [id])
+  test   test @relation(fields: [testId], references: [id])
 }
 
 enum SkinColor {

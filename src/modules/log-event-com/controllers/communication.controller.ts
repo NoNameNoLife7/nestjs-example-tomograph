@@ -21,7 +21,6 @@ export class CommunicationController {
   constructor(private readonly modelService: CommunicationService) {}
 
   private async getInstanceOr404(id: number): Promise<CommunicationModel> {
-
     const instance = await this.modelService.getId(id);
     if (!instance) throw new NotFoundException();
     return instance;
