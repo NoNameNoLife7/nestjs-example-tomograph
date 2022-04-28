@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { CommunicationService } from '../services';
 import { CreateCommunicationDto, UpdateCommunicationDto } from '../dto';
-import { communication as CommunicationModel } from '@prisma/client';
+import { comunication as CommunicationModel } from '@prisma/client';
 
 type CreateData = CreateCommunicationDto;
 type UpdateData = UpdateCommunicationDto;

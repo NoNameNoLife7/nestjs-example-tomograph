@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateTestDto, UpdateTestDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { test } from '@prisma/client';
+import {
+  EquipmentConfigurationService,
+  SoftwareConfigurationService,
+} from 'src/modules/configuration/services';
 
 type Model = test;
 type CreateData = CreateTestDto;
@@ -9,7 +13,12 @@ type UpdateData = UpdateTestDto;
 
 @Injectable()
 export class TestService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+
+    private softwareConfigurationService: SoftwareConfigurationService,
+    private equipmentConfigurationService: EquipmentConfigurationService,
+  ) {}
 
   get model() {
     return this.prisma.test;
@@ -33,8 +42,35 @@ export class TestService {
     return this.model.create({ data: createTestDto });
   }
 
-  update(id: number, updateTestDto: UpdateData): Promise<Model | null> {
-    return this.model.update({ where: { id }, data: updateTestDto });
+  async update(id: number, updateTestDto: UpdateData): Promise<Model | null> {
+    const test = await this.getId(id);
+    if (!test) {
+      throw Error();
+    }
+
+    const {
+      softwareConfiguration,
+      equipmentConfiguration,
+      ...nonForeignRelationFields
+    } = updateTestDto;
+
+    if (softwareConfiguration) {
+      this.softwareConfigurationService.update(
+        test.softwareConfigurationId,
+        softwareConfiguration,
+      );
+    }
+    if (equipmentConfiguration) {
+      this.equipmentConfigurationService.update(
+        test.equipmentConfigurationId,
+        equipmentConfiguration,
+      );
+    }
+
+    return this.model.update({
+      where: { id },
+      data: nonForeignRelationFields,
+    });
   }
 
   delete(id: number): Promise<Model | null> {
