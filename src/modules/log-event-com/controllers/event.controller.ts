@@ -9,8 +9,8 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { EventService } from '../../patient/services';
-import { CreateEventDto, UpdateEventDto } from '../../patient/dto';
+import { EventService } from '../services';
+import { CreateEventDto, UpdateEventDto } from '../dto';
 import { event as EventModel } from '@prisma/client';
 
 type CreateData = CreateEventDto;

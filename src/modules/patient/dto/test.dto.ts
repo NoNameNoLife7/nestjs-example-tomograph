@@ -11,7 +11,6 @@ import {
   PatientPosition,
   softwareConfiguration,
   equipmentConfiguration,
-  fan,
 } from '@prisma/client';
 
 export class CreateTestDto {
@@ -33,13 +32,9 @@ export class CreateTestDto {
   @IsEnum(PatientPosition)
   position: PatientPosition;
 
-  @IsOptional()
-  @IsInt()
-  patientId?: number;
+  softwareConfiguration: softwareConfiguration;
 
-  @IsOptional()
-  @IsInt()
-  ventilatorId?: number;
+  equipmentConfiguration: equipmentConfiguration;
 }
 
 export class UpdateTestDto extends PartialType(CreateTestDto) {}

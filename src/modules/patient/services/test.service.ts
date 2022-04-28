@@ -29,6 +29,7 @@ export class TestService {
   }
 
   create(createTestDto: CreateData): Promise<Model> {
+    console.log(createTestDto);
     return this.model.create({ data: createTestDto });
   }
 

@@ -1,4 +1,4 @@
-export { CreateVentilatorDto, UpdateVentilatorDto } from './fan.dto';
+export { CreateFanDto, UpdateFanDto } from './fan.dto';
 export {
   CreateSoftwareConfigurationDto,
   UpdateSoftwareConfigurationDto,

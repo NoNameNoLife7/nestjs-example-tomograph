@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVentilatorDto, UpdateVentilatorDto } from '../../patient/dto';
+import { CreateFanDto, UpdateFanDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { ventilator } from '@prisma/client';
+import { fan } from '@prisma/client';
 
-type Model = ventilator;
-type CreateData = CreateVentilatorDto;
-type UpdateData = UpdateVentilatorDto;
+type Model = fan;
+type CreateData = CreateFanDto;
+type UpdateData = UpdateFanDto;
 
 @Injectable()
 export class FanService {
   constructor(private prisma: PrismaService) {}
 
   get model() {
-    return this.prisma.ventilator;
+    return this.prisma.fan;
   }
 
   async getId(id: number): Promise<Model | null> {
@@ -28,12 +28,12 @@ export class FanService {
     return this.model.findMany();
   }
 
-  create(createVentilatorDto: CreateData): Promise<Model> {
-    return this.model.create({ data: createVentilatorDto });
+  create(createFanDto: CreateData): Promise<Model> {
+    return this.model.create({ data: createFanDto });
   }
 
-  update(id: number, updateVentilatorDto: UpdateData): Promise<Model | null> {
-    return this.model.update({ where: { id }, data: updateVentilatorDto });
+  update(id: number, updateFanDto: UpdateData): Promise<Model | null> {
+    return this.model.update({ where: { id }, data: updateFanDto });
   }
 
   delete(id: number): Promise<Model | null> {

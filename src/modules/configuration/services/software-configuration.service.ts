@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateSoftwareConfigurationDto,
   UpdateSoftwareConfigurationDto,
-} from '../../patient/dto';
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { softwareConfiguration } from '@prisma/client';
 

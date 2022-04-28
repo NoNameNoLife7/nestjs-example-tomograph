@@ -9,11 +9,11 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { SoftwareConfigurationService } from '../../patient/services';
+import { SoftwareConfigurationService } from '../services';
 import {
   CreateSoftwareConfigurationDto,
   UpdateSoftwareConfigurationDto,
-} from '../../patient/dto';
+} from '../dto';
 import { softwareConfiguration as SoftwareConfigurationModel } from '@prisma/client';
 
 type CreateData = CreateSoftwareConfigurationDto;

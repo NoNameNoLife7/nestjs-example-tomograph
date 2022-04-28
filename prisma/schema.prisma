@@ -69,8 +69,7 @@ model softwareConfiguration {
   createdDate  DateTime @default(now())
   lastModified DateTime? @updatedAt
 
-  test   test @relation(fields: [testId], references: [id])
-  testId Int
+  test   test?
 }
 
 model fan {
@@ -83,8 +82,7 @@ model fan {
   createdDate  DateTime @default(now())
   lastModified DateTime? @updatedAt
 
-  testId Int
-  test   test @relation(fields: [testId], references: [id])
+  test  test?
 }
 
 model log {
@@ -128,8 +126,8 @@ model equipmentConfiguration {
   createdDate  DateTime  @default(now())
   lastModified DateTime? @updatedAt
 
-  testId Int
-  test   test @relation(fields: [testId], references: [id])
+  test   test?
+
 
 }
 
@@ -174,14 +172,17 @@ model test {
   logs log[]
   images image[]
 
-  patientId Int?
   patient   patient? @relation(fields: [patientId], references: [id])
+  patientId Int?
 
-  fan   fan?
+  fan   fan? @relation(fields: [fanId], references: [id])
+  fanId Int?
 
-  softwareConfiguration   softwareConfiguration?
+  softwareConfiguration   softwareConfiguration @relation(fields: [softwareConfigurationId], references: [id])
+  softwareConfigurationId Int
 
-  equipmentConfiguration   equipmentConfiguration?
+  equipmentConfiguration   equipmentConfiguration @relation(fields: [equipmentConfigurationId], references: [id])
+  equipmentConfigurationId Int
 }
 
 
@@ -235,7 +236,7 @@ enum EventType {
   Otros
   Procederes
   VentilacionMecanica
-  CambiosDeModalidadVentilatoria
+  CambiosDeModalidadFania
   CambiosPostulares
   Medicamentos
   SufractantesPulmonares

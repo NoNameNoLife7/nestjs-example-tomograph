@@ -9,8 +9,8 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { LogService } from '../../patient/services';
-import { CreateLogDto, UpdateLogDto } from '../../patient/dto';
+import { LogService } from '../services';
+import { CreateLogDto, UpdateLogDto } from '../dto';
 import { log as LogModel } from '@prisma/client';
 
 type CreateData = CreateLogDto;

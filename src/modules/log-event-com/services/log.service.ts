@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLogDto, UpdateLogDto } from '../../patient/dto';
+import { CreateLogDto, UpdateLogDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { log } from '@prisma/client';
 

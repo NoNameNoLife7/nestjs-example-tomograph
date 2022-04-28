@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
-export class CreateVentilatorDto {
+export class CreateFanDto {
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -17,4 +17,4 @@ export class CreateVentilatorDto {
   protocol?: string;
 }
 
-export class UpdateVentilatorDto extends PartialType(CreateVentilatorDto) {}
+export class UpdateFanDto extends PartialType(CreateFanDto) {}

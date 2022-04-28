@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEventDto, UpdateEventDto } from '../../patient/dto';
+import { CreateEventDto, UpdateEventDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { event } from '@prisma/client';
 
