@@ -13,28 +13,20 @@ import { RoleService } from '../services';
 import { CreateRoleDto, UpdateRoleDto } from '../dto';
 import { role as RoleModel } from '@prisma/client';
 
-type CreateData = CreateRoleDto;
-type UpdateData = UpdateRoleDto;
-
-@Controller('roles')
+@Controller('role')
 export class RoleController {
   constructor(private readonly modelService: RoleService) {}
 
   private async getInstanceOr404(id: number): Promise<RoleModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
-  private async checkUniqueConstraints(name: string) {
-    const model = await this.modelService.getUniqueConstrain(name);
-    if (model) throw new Error('There is already a role with that name!');
-    return;
-  }
-
   @Get(':id')
-  get(@Param('id') id: string): Promise<RoleModel | null> {
-    return this.modelService.getId(+id);
+  getById(@Param('id') id: string): Promise<RoleModel | null> {
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -43,35 +35,24 @@ export class RoleController {
   }
 
   @Post()
-  async create(@Body() createRoleDto: CreateData): Promise<RoleModel | Error> {
-    await this.checkUniqueConstraints(createRoleDto.name);
+  async create(@Body() createRoleDto: CreateRoleDto): Promise<RoleModel> {
     const roleModel: RoleModel = await this.modelService.create(createRoleDto);
-    if (roleModel === undefined) {
-      throw new BadRequestException('Invalid role!');
-    }
-    return this.modelService.create(createRoleDto);
+    if (!roleModel) throw new BadRequestException('Invalid role!');
+    return roleModel;
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateRoleDto: UpdateData,
-  ): Promise<RoleModel | null> {
+    @Body() updateRoleDto: UpdateRoleDto,
+  ): Promise<RoleModel> {
     await this.getInstanceOr404(+id);
-    if (updateRoleDto.name)
-      await this.checkUniqueConstraints(updateRoleDto.name);
     return this.modelService.update(+id, updateRoleDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<RoleModel | null> {
+  async delete(@Param('id') id: string): Promise<RoleModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }
-
-/*  private async serializeResponse(instance: RoleModel) {
-  return instance;
-  // const { password, ...restOfFields} = instance
-  // return restOfFields;
-}*/

@@ -1,52 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTestDto, UpdateTestDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { test } from '@prisma/client';
-import {
-  EquipmentConfigurationService,
-  SoftwareConfigurationService,
-} from 'src/modules/configuration/services';
-
-type Model = test;
-type CreateData = CreateTestDto;
-type UpdateData = UpdateTestDto;
+import { PaginationDto, WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class TestService {
-  constructor(
-    private prisma: PrismaService,
+  constructor(private prisma: PrismaService) {}
 
-    private softwareConfigurationService: SoftwareConfigurationService,
-    private equipmentConfigurationService: EquipmentConfigurationService,
-  ) {}
-
-  get model() {
+  get test() {
     return this.prisma.test;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<test | null> {
+    return this.test.findUnique({ where: { id } });
   }
 
-  list(): Promise<Model[]> {
-    return this.model.findMany();
+  async list(params: PaginationDto): Promise<WithPagination<test>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: test[] = await this.test.findMany({
+      ...otherParams,
+      where,
+      include,
+      orderBy: { lastModified: orderBy },
+    });
+    const count: number = await this.test.count(where);
+
+    return { count, data };
   }
 
-  create(createTestDto: CreateData): Promise<Model> {
-    console.log(createTestDto);
-    return this.model.create({ data: createTestDto });
+  count() {
+    return this.test.count();
   }
 
-  async update(id: number, updateTestDto: UpdateData): Promise<Model | null> {
-    const test = await this.getId(id);
-    if (!test) {
-      throw Error();
-    }
+  create(createTestDto: CreateTestDto): Promise<test> {
+    const {
+      softwareConfiguration,
+      equipmentConfiguration,
+      ...nonForeignRelationFields
+    } = createTestDto;
+
+    return this.test.create({
+      data: {
+        ...nonForeignRelationFields,
+        softwareConfiguration: {
+          create: softwareConfiguration,
+        },
+        equipmentConfiguration: {
+          create: equipmentConfiguration,
+        },
+      },
+    });
+  }
+
+  async update(id: number, updateTestDto: UpdateTestDto): Promise<test> {
+    const test = await this.getById(id);
+    if (!test) throw new NotFoundException();
 
     const {
       softwareConfiguration,
@@ -54,26 +64,21 @@ export class TestService {
       ...nonForeignRelationFields
     } = updateTestDto;
 
-    if (softwareConfiguration) {
-      this.softwareConfigurationService.update(
-        test.softwareConfigurationId,
-        softwareConfiguration,
-      );
-    }
-    if (equipmentConfiguration) {
-      this.equipmentConfigurationService.update(
-        test.equipmentConfigurationId,
-        equipmentConfiguration,
-      );
-    }
-
-    return this.model.update({
+    return this.test.update({
       where: { id },
-      data: nonForeignRelationFields,
+      data: {
+        ...nonForeignRelationFields,
+        softwareConfiguration: {
+          update: softwareConfiguration,
+        },
+        equipmentConfiguration: {
+          update: equipmentConfiguration,
+        },
+      },
     });
   }
 
-  delete(id: number): Promise<Model | null> {
-    return this.model.delete({ where: { id } });
+  delete(id: number): Promise<test> {
+    return this.test.delete({ where: { id } });
   }
 }

@@ -13,22 +13,20 @@ import { PatientService } from '../services';
 import { CreatePatientDto, UpdatePatientDto } from '../dto';
 import { patient as PatientModel } from '@prisma/client';
 
-type CreateData = CreatePatientDto;
-type UpdateData = UpdatePatientDto;
-
-@Controller('patients')
+@Controller('patient')
 export class PatientController {
   constructor(private readonly modelService: PatientService) {}
 
   private async getInstanceOr404(id: number): Promise<PatientModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
   get(@Param('id') id: string): Promise<PatientModel | null> {
-    return this.modelService.getId(+id);
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -38,28 +36,28 @@ export class PatientController {
 
   @Post()
   async create(
-    @Body() createPatientDto: CreateData,
-  ): Promise<PatientModel | Error> {
+    @Body() createPatientDto: CreatePatientDto,
+  ): Promise<PatientModel> {
     const patientModel: PatientModel = await this.modelService.create(
       createPatientDto,
     );
-    if (!patientModel) {
-      throw new BadRequestException('Invalid patient!');
-    }
+    if (!patientModel) throw new BadRequestException('Invalid patient!');
     return this.modelService.create(createPatientDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updatePatientDto: UpdateData,
-  ): Promise<PatientModel | null> {
+    @Body() updatePatientDto: UpdatePatientDto,
+  ): Promise<PatientModel> {
+    if (!+id) throw new NotFoundException();
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updatePatientDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<PatientModel | null> {
+  async delete(@Param('id') id: string): Promise<PatientModel> {
+    if (!+id) throw new NotFoundException();
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

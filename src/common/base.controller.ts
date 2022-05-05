@@ -36,7 +36,7 @@ export class BaseModelController<Name> {
   }
 
   @Get(":id")
-  get(@Param("id") id: string): Promise<RoleModel | null> {
+  get(@Param("id") id: string): Promise<RoleModel> {
     return this.rolesService.get(+id);
   }
 
@@ -55,7 +55,7 @@ export class BaseModelController<Name> {
   update(
       @Param("id") id: string,
       @Body() updateRoleDto: UpdateDto,
-  ): Promise<RoleModel | null> {
+  ): Promise<RoleModel> {
 
     const instance = await  this.getInstanceOr404(id)
     this.checkUniqueConstraints()
@@ -63,7 +63,7 @@ export class BaseModelController<Name> {
   }
 
   @Delete(":id")
-  delete(@Param("id") id: string): Promise<RoleModel | null> {
+  delete(@Param("id") id: string): Promise<RoleModel> {
     const instance = await  this.getInstanceOr404(id)
     return this.rolesService.delete(id);
   }*/

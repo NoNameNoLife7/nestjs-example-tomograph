@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateCommunicationDto {
   @IsOptional()
@@ -13,6 +12,4 @@ export class CreateCommunicationDto {
   version?: string;
 }
 
-export class UpdateCommunicationDto extends PartialType(
-  CreateCommunicationDto,
-) {}
+export class UpdateCommunicationDto extends CreateCommunicationDto {}

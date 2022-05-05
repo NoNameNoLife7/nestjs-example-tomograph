@@ -3,40 +3,38 @@ import { CreatePatientDto, UpdatePatientDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { patient } from '@prisma/client';
 
-type Model = patient;
-type CreateData = CreatePatientDto;
-type UpdateData = UpdatePatientDto;
-
 @Injectable()
 export class PatientService {
   constructor(private prisma: PrismaService) {}
 
-  get model() {
+  get patient() {
     return this.prisma.patient;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<patient | null> {
+    return this.patient.findUnique({
+      where: { id },
+    });
   }
 
-  list(): Promise<Model[]> {
-    return this.model.findMany();
+  list(): Promise<patient[]> {
+    return this.patient.findMany();
   }
 
-  create(createPatientDto: CreateData): Promise<Model> {
-    return this.model.create({ data: createPatientDto });
+  create(createPatientDto: CreatePatientDto): Promise<patient> {
+    return this.patient.create({
+      data: createPatientDto,
+    });
   }
 
-  update(id: number, updatePatientDto: UpdateData): Promise<Model | null> {
-    return this.model.update({ where: { id }, data: updatePatientDto });
+  update(id: number, updatePatientDto: UpdatePatientDto): Promise<patient> {
+    return this.patient.update({
+      where: { id },
+      data: updatePatientDto,
+    });
   }
 
-  delete(id: number): Promise<Model | null> {
-    return this.model.delete({ where: { id } });
+  delete(id: number): Promise<patient> {
+    return this.patient.delete({ where: { id } });
   }
 }

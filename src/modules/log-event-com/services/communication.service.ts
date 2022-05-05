@@ -15,13 +15,10 @@ export class CommunicationService {
     return this.prisma.communication;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<Model | null> {
+    return this.model.findUnique({
+      where: { id },
+    });
   }
 
   list(): Promise<Model[]> {
@@ -32,14 +29,11 @@ export class CommunicationService {
     return this.model.create({ data: createCommunicationDto });
   }
 
-  update(
-    id: number,
-    updateCommunicationDto: UpdateData,
-  ): Promise<Model | null> {
+  update(id: number, updateCommunicationDto: UpdateData): Promise<Model> {
     return this.model.update({ where: { id }, data: updateCommunicationDto });
   }
 
-  delete(id: number): Promise<Model | null> {
+  delete(id: number): Promise<Model> {
     return this.model.delete({ where: { id } });
   }
 }

@@ -15,13 +15,10 @@ export class LogService {
     return this.prisma.log;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  async getById(id: number): Promise<Model | null> {
+    return await this.model.findUnique({
+      where: { id },
+    });
   }
 
   list(): Promise<Model[]> {
@@ -32,11 +29,11 @@ export class LogService {
     return this.model.create({ data: createLogDto });
   }
 
-  update(id: number, updateLogDto: UpdateData): Promise<Model | null> {
+  update(id: number, updateLogDto: UpdateData): Promise<Model> {
     return this.model.update({ where: { id }, data: updateLogDto });
   }
 
-  delete(id: number): Promise<Model | null> {
+  delete(id: number): Promise<Model> {
     return this.model.delete({ where: { id } });
   }
 }

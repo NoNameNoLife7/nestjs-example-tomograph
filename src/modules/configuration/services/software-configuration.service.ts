@@ -6,46 +6,43 @@ import {
 import { PrismaService } from '../../../prisma/prisma.service';
 import { softwareConfiguration } from '@prisma/client';
 
-type Model = softwareConfiguration;
-type CreateData = CreateSoftwareConfigurationDto;
-type UpdateData = UpdateSoftwareConfigurationDto;
-
 @Injectable()
 export class SoftwareConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  get model() {
+  get softwareConfiguration() {
     return this.prisma.softwareConfiguration;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<softwareConfiguration | null> {
+    return this.softwareConfiguration.findUnique({
+      where: { id },
+    });
   }
 
-  list(): Promise<Model[]> {
-    return this.model.findMany();
+  list(): Promise<softwareConfiguration[]> {
+    return this.softwareConfiguration.findMany();
   }
 
-  create(createSoftwareConfigurationDto: CreateData): Promise<Model> {
-    return this.model.create({ data: createSoftwareConfigurationDto });
+  create(
+    createSoftwareConfigurationDto: CreateSoftwareConfigurationDto,
+  ): Promise<softwareConfiguration> {
+    return this.softwareConfiguration.create({
+      data: createSoftwareConfigurationDto,
+    });
   }
 
   update(
     id: number,
-    updateSoftwareConfigurationDto: UpdateData,
-  ): Promise<Model | null> {
-    return this.model.update({
+    updateSoftwareConfigurationDto: UpdateSoftwareConfigurationDto,
+  ): Promise<softwareConfiguration> {
+    return this.softwareConfiguration.update({
       where: { id },
       data: updateSoftwareConfigurationDto,
     });
   }
 
-  delete(id: number): Promise<Model | null> {
-    return this.model.delete({ where: { id } });
+  delete(id: number): Promise<softwareConfiguration> {
+    return this.softwareConfiguration.delete({ where: { id } });
   }
 }

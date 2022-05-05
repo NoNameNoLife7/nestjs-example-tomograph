@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
+
 import { Sex, SkinColor } from '@prisma/client';
 
 export class CreatePatientDto {
@@ -51,4 +51,4 @@ export class CreatePatientDto {
   skinColor?: SkinColor;
 }
 
-export class UpdatePatientDto extends PartialType(CreatePatientDto) {}
+export class UpdatePatientDto extends CreatePatientDto {}

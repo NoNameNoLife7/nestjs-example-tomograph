@@ -12,50 +12,44 @@ import {
 import { TestService } from '../services';
 import { CreateTestDto, UpdateTestDto } from '../dto';
 import { test as TestModel } from '@prisma/client';
+import { PaginationDto } from 'src/common/utils/utils';
 
-type CreateData = CreateTestDto;
-type UpdateData = UpdateTestDto;
-
-@Controller('tests')
+@Controller('test')
 export class TestController {
   constructor(private readonly modelService: TestService) {}
 
-  private async getInstanceOr404(id: number): Promise<TestModel> {
-    const instance = await this.modelService.getId(id);
+  private async getInstanceOr404(id: number) {
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
-  @Get(':id')
-  get(@Param('id') id: string): Promise<TestModel | null> {
-    return this.modelService.getId(+id);
+  @Get()
+  list(@Body() params: PaginationDto) {
+    return this.modelService.list(params);
   }
 
-  @Get()
-  list(): Promise<TestModel[]> {
-    return this.modelService.list();
+  @Get(':id')
+  get(@Param('id') id: string) {
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Post()
-  async create(@Body() createTestDto: CreateData): Promise<TestModel | Error> {
+  async create(@Body() createTestDto: CreateTestDto) {
     const testModel: TestModel = await this.modelService.create(createTestDto);
-    if (!testModel) {
-      throw new BadRequestException('Invalid test!');
-    }
-    return this.modelService.create(createTestDto);
+    if (!testModel) throw new BadRequestException('Invalid test!');
+    return testModel;
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateTestDto: UpdateData,
-  ): Promise<TestModel | null> {
+  async update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateTestDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<TestModel | null> {
+  async delete(@Param('id') id: string) {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

@@ -6,46 +6,52 @@ import {
 import { PrismaService } from '../../../prisma/prisma.service';
 import { equipmentConfiguration } from '@prisma/client';
 
-type Model = equipmentConfiguration;
-type CreateData = CreateEquipmentConfigurationDto;
-type UpdateData = UpdateEquipmentConfigurationDto;
-
 @Injectable()
 export class EquipmentConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  get model() {
+  get equipmentConfiguration() {
     return this.prisma.equipmentConfiguration;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<equipmentConfiguration | null> {
+    return this.equipmentConfiguration.findUnique({
+      where: { id },
+    });
   }
 
-  list(): Promise<Model[]> {
-    return this.model.findMany();
+  list(): Promise<equipmentConfiguration[]> {
+    return this.equipmentConfiguration.findMany();
   }
 
-  create(createEquipmentConfigurationDto: CreateData): Promise<Model> {
-    return this.model.create({ data: createEquipmentConfigurationDto });
+  lastConfiguration(): Promise<equipmentConfiguration[]> {
+    return this.equipmentConfiguration.findMany({
+      orderBy: {
+        lastModified: 'desc',
+      },
+      take: 1,
+    });
+  }
+
+  create(
+    createEquipmentConfigurationDto: CreateEquipmentConfigurationDto,
+  ): Promise<equipmentConfiguration> {
+    return this.equipmentConfiguration.create({
+      data: createEquipmentConfigurationDto,
+    });
   }
 
   update(
     id: number,
-    updateEquipmentConfigurationDto: UpdateData,
-  ): Promise<Model | null> {
-    return this.model.update({
+    updateEquipmentConfigurationDto: UpdateEquipmentConfigurationDto,
+  ): Promise<equipmentConfiguration> {
+    return this.equipmentConfiguration.update({
       where: { id },
       data: updateEquipmentConfigurationDto,
     });
   }
 
-  delete(id: number): Promise<Model | null> {
-    return this.model.delete({ where: { id } });
+  delete(id: number): Promise<equipmentConfiguration> {
+    return this.equipmentConfiguration.delete({ where: { id } });
   }
 }

@@ -1,74 +1,67 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Controller, Get, NotFoundException } from '@nestjs/common';
 import { EquipmentConfigurationService } from '../services';
 
+/*
 import {
   CreateEquipmentConfigurationDto,
   UpdateEquipmentConfigurationDto,
 } from '../dto';
+*/
 
-import { equipmentConfiguration as EquipmentConfigurationModel } from '@prisma/client';
+import {
+  equipmentConfiguration as EquipmentConfigurationModel,
+  //Prisma,
+} from '@prisma/client';
 
-type CreateData = CreateEquipmentConfigurationDto;
-type UpdateData = UpdateEquipmentConfigurationDto;
-
-@Controller('equipmentConfigurations')
+@Controller('equipmentConfiguration')
 export class EquipmentConfigurationController {
   constructor(private readonly modelService: EquipmentConfigurationService) {}
 
-  private async getInstanceOr404(
-    id: number,
-  ): Promise<EquipmentConfigurationModel> {
-    const instance = await this.modelService.getId(id);
-    if (!instance) throw new NotFoundException();
-    return instance;
+  @Get('lastConfiguration')
+  async lastEquipmentConfiguration(): Promise<EquipmentConfigurationModel> {
+    const model = await this.modelService.lastConfiguration();
+    if (model[0]) return model[0];
+    else throw new NotFoundException();
   }
 
-  @Get(':id')
-  get(@Param('id') id: string): Promise<EquipmentConfigurationModel | null> {
-    return this.modelService.getId(+id);
-  }
+  // private async getInstanceOr404(
+  //   id: number,
+  // ): Promise<EquipmentConfigurationModel> {
+  //   const instance = await this.modelService.getById(id);
+  //   if (!instance) throw new NotFoundException();
+  //   return instance;
+  // }
 
-  @Get()
-  list(): Promise<EquipmentConfigurationModel[]> {
-    return this.modelService.list();
-  }
+  // @Get(':id')
+  // get(@Param('id') id: string): Promise<EquipmentConfigurationModel> {
+  //   if (!+id) throw new NotFoundException();
+  //   return this.getInstanceOr404(+id);
+  // }
 
-  @Post()
-  async create(
-    @Body() createEquipmentConfigurationDto: CreateData,
-  ): Promise<EquipmentConfigurationModel | Error> {
-    const equipmentConfigurationModel: EquipmentConfigurationModel =
-      await this.modelService.create(createEquipmentConfigurationDto);
-    if (!equipmentConfigurationModel) {
-      throw new BadRequestException('Invalid equipmentConfiguration!');
-    }
-    return this.modelService.create(createEquipmentConfigurationDto);
-  }
+  // @Get()
+  // list(): Promise<EquipmentConfigurationModel[]> {
+  //   return this.modelService.list();
+  // }
 
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateEquipmentConfigurationDto: UpdateData,
-  ): Promise<EquipmentConfigurationModel | null> {
-    await this.getInstanceOr404(+id);
-    return this.modelService.update(+id, updateEquipmentConfigurationDto);
-  }
+  // @Post()
+  // create(
+  //   @Body() createEquipmentConfigurationDto: CreateEquipmentConfigurationDto,
+  // ): Promise<EquipmentConfigurationModel> {
+  //   return this.modelService.create(createEquipmentConfigurationDto);
+  // }
 
-  @Delete(':id')
-  async delete(
-    @Param('id') id: string,
-  ): Promise<EquipmentConfigurationModel | null> {
-    await this.getInstanceOr404(+id);
-    return this.modelService.delete(+id);
-  }
+  // @Patch(':id')
+  // async update(
+  //   @Param('id') id: string,
+  //   @Body() updateEquipmentConfigurationDto: UpdateEquipmentConfigurationDto,
+  // ): Promise<EquipmentConfigurationModel> {
+  //   await this.getInstanceOr404(+id);
+  //   return this.modelService.update(+id, updateEquipmentConfigurationDto);
+  // }
+
+  // @Delete(':id')
+  // async delete(@Param('id') id: string): Promise<EquipmentConfigurationModel> {
+  //   await this.getInstanceOr404(+id);
+  //   return this.modelService.delete(+id);
+  // }
 }

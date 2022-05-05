@@ -16,19 +16,20 @@ import { event as EventModel } from '@prisma/client';
 type CreateData = CreateEventDto;
 type UpdateData = UpdateEventDto;
 
-@Controller('events')
+@Controller('event')
 export class EventController {
   constructor(private readonly modelService: EventService) {}
 
   private async getInstanceOr404(id: number): Promise<EventModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
   get(@Param('id') id: string): Promise<EventModel | null> {
-    return this.modelService.getId(+id);
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -37,15 +38,11 @@ export class EventController {
   }
 
   @Post()
-  async create(
-    @Body() createEventDto: CreateData,
-  ): Promise<EventModel | Error> {
+  async create(@Body() createEventDto: CreateData): Promise<EventModel> {
     const eventModel: EventModel = await this.modelService.create(
       createEventDto,
     );
-    if (!eventModel) {
-      throw new BadRequestException('Invalid event!');
-    }
+    if (!eventModel) throw new BadRequestException('Invalid event!');
     return this.modelService.create(createEventDto);
   }
 
@@ -53,13 +50,13 @@ export class EventController {
   async update(
     @Param('id') id: string,
     @Body() updateEventDto: UpdateData,
-  ): Promise<EventModel | null> {
+  ): Promise<EventModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateEventDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<EventModel | null> {
+  async delete(@Param('id') id: string): Promise<EventModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

@@ -1,17 +1,23 @@
 import {
+  IsArray,
   IsEnum,
   IsInt,
-  IsJSON,
   IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
+
 import {
   PatientPosition,
-  softwareConfiguration,
-  equipmentConfiguration,
+  //softwareConfiguration,
+  //equipmentConfiguration,
 } from '@prisma/client';
+import { Type } from 'class-transformer';
+import {
+  CreateEquipmentConfigurationDto,
+  CreateSoftwareConfigurationDto,
+} from 'src/modules/configuration/dto';
 
 export class CreateTestDto {
   @IsInt()
@@ -22,8 +28,8 @@ export class CreateTestDto {
   @IsInt()
   peep?: number;
 
-  @IsJSON()
-  directory: []; //fix
+  @IsArray()
+  directory: number[]; //fix
 
   @IsOptional()
   @IsString()
@@ -32,9 +38,17 @@ export class CreateTestDto {
   @IsEnum(PatientPosition)
   position: PatientPosition;
 
-  softwareConfiguration: softwareConfiguration;
+  @ValidateNested()
+  @Type(() => CreateSoftwareConfigurationDto)
+  softwareConfiguration: CreateSoftwareConfigurationDto;
 
-  equipmentConfiguration: equipmentConfiguration;
+  @ValidateNested()
+  @Type(() => CreateEquipmentConfigurationDto)
+  equipmentConfiguration: CreateEquipmentConfigurationDto;
 }
 
-export class UpdateTestDto extends PartialType(CreateTestDto) {}
+export class UpdateTestDto extends CreateTestDto {}
+
+//partial type
+//crestedAt
+//updatedAt

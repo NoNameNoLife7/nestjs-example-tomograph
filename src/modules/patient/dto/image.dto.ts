@@ -1,21 +1,19 @@
 import {
+  IsArray,
   IsDate,
   IsInt,
-  IsJSON,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateImageDto {
   @IsOptional()
   @IsDate()
   date?: Date;
 
-  @IsJSON()
-  @IsNotEmpty()
-  directory: []; //fix
+  @IsArray()
+  directory: number[];
 
   @IsOptional()
   @IsNotEmpty()
@@ -26,4 +24,4 @@ export class CreateImageDto {
   testId: number;
 }
 
-export class UpdateImageDto extends PartialType(CreateImageDto) {}
+export class UpdateImageDto extends CreateImageDto {}

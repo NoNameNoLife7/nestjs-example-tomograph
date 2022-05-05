@@ -13,22 +13,20 @@ import { ImageService } from '../services';
 import { CreateImageDto, UpdateImageDto } from '../dto';
 import { image as ImageModel } from '@prisma/client';
 
-type CreateData = CreateImageDto;
-type UpdateData = UpdateImageDto;
-
-@Controller('images')
+@Controller('image')
 export class ImageController {
   constructor(private readonly modelService: ImageService) {}
 
   private async getInstanceOr404(id: number): Promise<ImageModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
   get(@Param('id') id: string): Promise<ImageModel | null> {
-    return this.modelService.getId(+id);
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -37,29 +35,25 @@ export class ImageController {
   }
 
   @Post()
-  async create(
-    @Body() createImageDto: CreateData,
-  ): Promise<ImageModel | Error> {
+  async create(@Body() createImageDto: CreateImageDto): Promise<ImageModel> {
     const imageModel: ImageModel = await this.modelService.create(
       createImageDto,
     );
-    if (!imageModel) {
-      throw new BadRequestException('Invalid image!');
-    }
+    if (!imageModel) throw new BadRequestException('Invalid image!');
     return this.modelService.create(createImageDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateImageDto: UpdateData,
-  ): Promise<ImageModel | null> {
+    @Body() updateImageDto: UpdateImageDto,
+  ): Promise<ImageModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateImageDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<ImageModel | null> {
+  async delete(@Param('id') id: string): Promise<ImageModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

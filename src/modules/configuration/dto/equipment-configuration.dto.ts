@@ -7,17 +7,20 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
+
 import { Direction } from '@prisma/client';
 
 export class CreateEquipmentConfigurationDto {
+  @IsInt()
+  id: number;
+
   @IsOptional()
   @IsBoolean()
-  adjacent?: boolean;
+  adjacent: boolean | null;
 
   @IsOptional()
   @IsNumber()
-  injectionFrequency?: number;
+  injectionFrequency: number | null;
 
   @IsEnum(Direction)
   @IsNotEmpty()
@@ -26,9 +29,7 @@ export class CreateEquipmentConfigurationDto {
   @IsOptional()
   @IsInt()
   @IsString()
-  jump?: number;
+  jump: number | null;
 }
 
-export class UpdateEquipmentConfigurationDto extends PartialType(
-  CreateEquipmentConfigurationDto,
-) {}
+export class UpdateEquipmentConfigurationDto extends CreateEquipmentConfigurationDto {}

@@ -1,20 +1,18 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+
 import { Language } from '@prisma/client';
 
 export class CreateSoftwareConfigurationDto {
   @IsOptional()
-  @IsNumber()
-  brightness?: number;
+  @IsInt()
+  brightness: number | null;
 
   @IsEnum(Language)
   @IsNotEmpty()
-  event: Language;
+  language: Language;
 }
 
-export class UpdateSoftwareConfigurationDto extends PartialType(
-  CreateSoftwareConfigurationDto,
-) {}
+export class UpdateSoftwareConfigurationDto extends CreateSoftwareConfigurationDto {}
 
 /*
  * modulo 1 - user and role ---> user

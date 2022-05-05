@@ -11,8 +11,10 @@ import {
   RecordController,
   TestController,
 } from './controllers';
+import { ConfigurationModule } from '../configuration/configuration.module';
 
 @Module({
+  imports: [ConfigurationModule],
   controllers: [
     PatientController,
     ImageController,

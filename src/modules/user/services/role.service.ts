@@ -3,49 +3,38 @@ import { CreateRoleDto, UpdateRoleDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { role } from '@prisma/client';
 
-type Model = role;
-type CreateData = CreateRoleDto;
-type UpdateData = UpdateRoleDto;
-
 @Injectable()
 export class RoleService {
   constructor(private prisma: PrismaService) {}
 
-  get model() {
+  get role() {
     return this.prisma.role;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<role | null> {
+    return this.role.findUnique({
+      where: { id },
+    });
   }
 
-  async getUniqueConstrain(name: string): Promise<Model | null> {
-    let roleModel;
-    if (name)
-      roleModel = await this.model.findUnique({
-        where: { name },
-      });
-    return roleModel;
+  list(): Promise<role[]> {
+    return this.role.findMany();
   }
 
-  list(): Promise<Model[]> {
-    return this.model.findMany();
+  create(createRoleDto: CreateRoleDto): Promise<role> {
+    return this.role.create({
+      data: createRoleDto,
+    });
   }
 
-  create(createRoleDto: CreateData): Promise<Model> {
-    return this.model.create({ data: createRoleDto });
+  update(id: number, updateRoleDto: UpdateRoleDto): Promise<role> {
+    return this.role.update({
+      where: { id },
+      data: updateRoleDto,
+    });
   }
 
-  update(id: number, updateRoleDto: UpdateData): Promise<Model | null> {
-    return this.model.update({ where: { id }, data: updateRoleDto });
-  }
-
-  delete(id: number): Promise<Model | null> {
-    return this.model.delete({ where: { id } });
+  delete(id: number): Promise<role> {
+    return this.role.delete({ where: { id } });
   }
 }

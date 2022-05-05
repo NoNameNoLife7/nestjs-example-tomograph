@@ -13,22 +13,20 @@ import { RecordService } from '../services';
 import { CreateRecordDto, UpdateRecordDto } from '../dto';
 import { record as RecordModel } from '@prisma/client';
 
-type CreateData = CreateRecordDto;
-type UpdateData = UpdateRecordDto;
-
-@Controller('records')
+@Controller('record')
 export class RecordController {
   constructor(private readonly modelService: RecordService) {}
 
   private async getInstanceOr404(id: number): Promise<RecordModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string): Promise<RecordModel | null> {
-    return this.modelService.getId(+id);
+  get(@Param('id') id: string): Promise<RecordModel> {
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -37,29 +35,27 @@ export class RecordController {
   }
 
   @Post()
-  async create(
-    @Body() createRecordDto: CreateData,
-  ): Promise<RecordModel | Error> {
+  async create(@Body() createRecordDto: CreateRecordDto): Promise<RecordModel> {
     const recordModel: RecordModel = await this.modelService.create(
       createRecordDto,
     );
-    if (!recordModel) {
-      throw new BadRequestException('Invalid record!');
-    }
+    if (!recordModel) throw new BadRequestException('Invalid record!');
     return this.modelService.create(createRecordDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateRecordDto: UpdateData,
-  ): Promise<RecordModel | null> {
+    @Body() updateRecordDto: UpdateRecordDto,
+  ): Promise<RecordModel> {
+    if (!+id) throw new NotFoundException();
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateRecordDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<RecordModel | null> {
+  async delete(@Param('id') id: string): Promise<RecordModel> {
+    if (!+id) throw new NotFoundException();
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

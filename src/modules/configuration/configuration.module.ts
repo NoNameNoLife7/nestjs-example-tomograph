@@ -7,12 +7,12 @@ import {
 import {
   EquipmentConfigurationController,
   FanController,
-  SoftwareConfigurationController,
+  //SoftwareConfigurationController,
 } from './controllers';
 
 @Module({
   controllers: [
-    SoftwareConfigurationController,
+    //SoftwareConfigurationController,
     FanController,
     EquipmentConfigurationController,
   ],
@@ -21,5 +21,6 @@ import {
     FanService,
     EquipmentConfigurationService,
   ],
+  exports: [SoftwareConfigurationService, EquipmentConfigurationService],
 })
-export class PatientModule {}
+export class ConfigurationModule {}

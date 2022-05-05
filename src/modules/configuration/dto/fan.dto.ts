@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateFanDto {
   @IsNotEmpty()
@@ -17,4 +16,4 @@ export class CreateFanDto {
   protocol?: string;
 }
 
-export class UpdateFanDto extends PartialType(CreateFanDto) {}
+export class UpdateFanDto extends CreateFanDto {}

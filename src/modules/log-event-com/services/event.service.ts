@@ -15,13 +15,10 @@ export class EventService {
     return this.prisma.event;
   }
 
-  async getId(id: number): Promise<Model | null> {
-    if (id) {
-      return await this.model.findUnique({
-        where: { id },
-      });
-    }
-    return null;
+  getById(id: number): Promise<Model | null> {
+    return this.model.findUnique({
+      where: { id },
+    });
   }
 
   list(): Promise<Model[]> {
@@ -32,11 +29,11 @@ export class EventService {
     return this.model.create({ data: createEventDto });
   }
 
-  update(id: number, updateEventDto: UpdateData): Promise<Model | null> {
+  update(id: number, updateEventDto: UpdateData): Promise<Model> {
     return this.model.update({ where: { id }, data: updateEventDto });
   }
 
-  delete(id: number): Promise<Model | null> {
+  delete(id: number): Promise<Model> {
     return this.model.delete({ where: { id } });
   }
 }

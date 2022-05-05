@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
+
 import { EventType } from '@prisma/client';
 
 export class CreateEventDto {
@@ -25,4 +25,4 @@ export class CreateEventDto {
   eventType: EventType;
 }
 
-export class UpdateEventDto extends PartialType(CreateEventDto) {}
+export class UpdateEventDto extends CreateEventDto {}

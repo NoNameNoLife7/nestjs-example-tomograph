@@ -15,8 +15,8 @@ model role {
 
   name String @unique
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   users user[]
 }
@@ -28,8 +28,8 @@ model user {
   firstName String @db.VarChar(128)
   lastName  String @db.VarChar(255)
 
-  createDate   DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createDate DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
 
   active Boolean? @default(true)
 
@@ -52,8 +52,8 @@ model patient {
   sex       Sex       @default(U)
   skinColor SkinColor @default(U)
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   tests test[]
 }
@@ -66,8 +66,8 @@ model softwareConfiguration {
 
   language Language @default(ES)
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   test test?
 }
@@ -79,8 +79,8 @@ model fan {
   model    String? @db.VarChar(256)
   protocol String? @db.VarChar(256)
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   test test?
 }
@@ -92,8 +92,8 @@ model log {
   comment String?
   date    DateTime
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   eventId Int?
   event   event? @relation(fields: [eventId], references: [id])
@@ -108,11 +108,22 @@ model image {
   directory Json[]
   file      String?
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   testId Int
   test   test @relation(fields: [testId], references: [id])
+}
+
+model pathNode {
+  id Int @id @default(autoincrement())
+
+  parentId Int
+
+  parent pathNode @relation("parenthood", fields: [parentId], references: [id])
+
+  children pathNode[] @relation("parenthood")
+
 }
 
 model equipmentConfiguration {
@@ -123,8 +134,8 @@ model equipmentConfiguration {
   direction          Direction
   jump               Int?      @default(0)
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   test test?
 }
@@ -134,8 +145,8 @@ model communication {
   protocol String?
   version  String?
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model event {
@@ -149,22 +160,22 @@ model event {
 
   logs log[]
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model test {
   id Int @id @default(autoincrement())
 
-  startDate    DateTime        @default(now())
-  endDate      DateTime        @default(now())
-  inclination  Int
-  peep         Int?
-  createdDate  DateTime        @default(now())
-  lastModified DateTime?       @updatedAt
-  directory    Json[]
-  file         String?
-  position     PatientPosition
+  startDate   DateTime        @default(now())
+  endDate     DateTime        @default(now())
+  inclination Int
+  peep        Int?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime?       @updatedAt
+  directory   Json[]
+  file        String?
+  position    PatientPosition
 
   records record[]
   logs    log[]
@@ -189,8 +200,8 @@ model record {
   startDate DateTime @default(now())
   endDate   DateTime @default(now())
 
-  createdDate  DateTime  @default(now())
-  lastModified DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   testId Int
   test   test @relation(fields: [testId], references: [id])

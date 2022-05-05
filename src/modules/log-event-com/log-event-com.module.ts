@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { LogController } from './controllers';
-import { EventService, LogService } from './services';
+import { EventController, LogController } from './controllers';
+import { CommunicationController } from './controllers/communication.controller';
+import { CommunicationService, EventService, LogService } from './services';
 
 @Module({
-  controllers: [LogController, EventService],
-  providers: [LogService, EventService],
+  controllers: [LogController, EventController, CommunicationController],
+  providers: [LogService, EventService, CommunicationService],
 })
-export class PatientModule {}
+export class LogEventComModule {}

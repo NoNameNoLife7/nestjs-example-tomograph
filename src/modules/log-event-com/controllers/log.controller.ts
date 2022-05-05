@@ -16,19 +16,20 @@ import { log as LogModel } from '@prisma/client';
 type CreateData = CreateLogDto;
 type UpdateData = UpdateLogDto;
 
-@Controller('logs')
+@Controller('log')
 export class LogController {
   constructor(private readonly modelService: LogService) {}
 
   private async getInstanceOr404(id: number): Promise<LogModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
   get(@Param('id') id: string): Promise<LogModel | null> {
-    return this.modelService.getId(+id);
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -37,7 +38,7 @@ export class LogController {
   }
 
   @Post()
-  async create(@Body() createLogDto: CreateData): Promise<LogModel | Error> {
+  async create(@Body() createLogDto: CreateData): Promise<LogModel> {
     const logModel: LogModel = await this.modelService.create(createLogDto);
     if (!logModel) {
       throw new BadRequestException('Invalid log!');
@@ -49,13 +50,13 @@ export class LogController {
   async update(
     @Param('id') id: string,
     @Body() updateLogDto: UpdateData,
-  ): Promise<LogModel | null> {
+  ): Promise<LogModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateLogDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<LogModel | null> {
+  async delete(@Param('id') id: string): Promise<LogModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

@@ -13,28 +13,20 @@ import { UserService } from '../services';
 import { CreateUserDto, UpdateUserDto } from '../dto';
 import { user as UserModel } from '@prisma/client';
 
-type CreateData = CreateUserDto;
-type UpdateData = UpdateUserDto;
-
 @Controller('user')
 export class UserController {
   constructor(private readonly modelService: UserService) {}
 
   private async getInstanceOr404(id: number): Promise<UserModel> {
-    const instance = await this.modelService.getId(id);
+    const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
-  private async checkUniqueConstraints(name: string) {
-    const model = await this.modelService.getUniqueConstrain(name);
-    if (model) throw new Error('There is already a User with that name!');
-    return;
-  }
-
   @Get(':id')
-  get(@Param('id') id: string): Promise<UserModel | null> {
-    return this.modelService.getId(+id);
+  get(@Param('id') id: string): Promise<UserModel> {
+    if (!+id) throw new NotFoundException();
+    return this.getInstanceOr404(+id);
   }
 
   @Get()
@@ -43,28 +35,23 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateData): Promise<UserModel | Error> {
-    await this.checkUniqueConstraints(createUserDto.email);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
     const UserModel: UserModel = await this.modelService.create(createUserDto);
-    if (UserModel === undefined) {
-      throw new BadRequestException('Invalid User!');
-    }
+    if (!UserModel) throw new BadRequestException('Invalid User!');
     return this.modelService.create(createUserDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateData,
-  ): Promise<UserModel | null> {
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
     await this.getInstanceOr404(+id);
-    if (updateUserDto.email)
-      await this.checkUniqueConstraints(updateUserDto.email);
     return this.modelService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<UserModel | null> {
+  async delete(@Param('id') id: string): Promise<UserModel> {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
@@ -75,3 +62,10 @@ export class UserController {
   // const { password, ...restOfFields} = instance
   // return restOfFields;
 }*/
+
+// private async checkUniqueConstraints(name: string) {
+//   const model = await this.modelService.getUniqueConstrain(name);
+//   if (model)
+//     throw new HttpException('There is already a User with that name!', 500);
+//   return;
+// }
