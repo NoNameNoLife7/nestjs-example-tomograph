@@ -9,11 +9,10 @@ import {
 } from 'class-validator';
 
 import { Direction } from '@prisma/client';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateEquipmentConfigurationDto {
-  @IsInt()
-  id: number;
-
   @IsOptional()
   @IsBoolean()
   adjacent: boolean | null;
@@ -33,3 +32,20 @@ export class CreateEquipmentConfigurationDto {
 }
 
 export class UpdateEquipmentConfigurationDto extends CreateEquipmentConfigurationDto {}
+
+export class EquipmentConfigurationIncludeDTO extends BaseIncludeDTO {
+  test?: boolean;
+
+  constructor(includeQueryParam: string) {
+    super(includeQueryParam, ['test']);
+  }
+}
+
+export class EquipmentConfigurationPaginationDto extends PaginationDto {
+  @IsOptional()
+  @Transform(({ value }) => new EquipmentConfigurationIncludeDTO(value))
+  @Type(() => EquipmentConfigurationIncludeDTO)
+  include: EquipmentConfigurationIncludeDTO;
+
+  where?: any;
+}

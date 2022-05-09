@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
   CreateSoftwareConfigurationDto,
+  SoftwareConfigurationPaginationDto,
   UpdateSoftwareConfigurationDto,
 } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { softwareConfiguration } from '@prisma/client';
+import { WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class SoftwareConfigurationService {
@@ -20,8 +22,21 @@ export class SoftwareConfigurationService {
     });
   }
 
-  list(): Promise<softwareConfiguration[]> {
-    return this.softwareConfiguration.findMany();
+  async list(
+    params: SoftwareConfigurationPaginationDto,
+  ): Promise<WithPagination<softwareConfiguration>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: softwareConfiguration[] =
+      await this.softwareConfiguration.findMany({
+        ...otherParams,
+        where,
+        include,
+        orderBy: { lastModified: orderBy },
+      });
+    const count: number = await this.softwareConfiguration.count(where);
+
+    return { count, data };
   }
 
   create(

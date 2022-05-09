@@ -1,4 +1,24 @@
-export { CreatePatientDto, UpdatePatientDto } from './patient.dto';
-export { CreateTestDto, UpdateTestDto } from './test.dto';
-export { UpdateImageDto, CreateImageDto } from './image.dto';
-export { CreateRecordDto, UpdateRecordDto } from './record.dto';
+export {
+  CreatePatientDto,
+  UpdatePatientDto,
+  PatientIncludeDTO,
+  PatientPaginationDto,
+} from './patient.dto';
+export {
+  CreateTestDto,
+  UpdateTestDto,
+  TestIncludeDTO,
+  TestPaginationDto,
+} from './test.dto';
+export {
+  UpdateImageDto,
+  CreateImageDto,
+  ImageIncludeDTO,
+  ImagePaginationDto,
+} from './image.dto';
+export {
+  CreateRecordDto,
+  UpdateRecordDto,
+  RecordIncludeDTO,
+  RecordPaginationDto,
+} from './record.dto';

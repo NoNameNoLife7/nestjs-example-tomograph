@@ -8,10 +8,12 @@ import {
   Delete,
   NotFoundException,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { SoftwareConfigurationService } from '../services';
 import {
   CreateSoftwareConfigurationDto,
+  SoftwareConfigurationPaginationDto,
   UpdateSoftwareConfigurationDto,
 } from '../dto';
 import { softwareConfiguration as SoftwareConfigurationModel } from '@prisma/client';
@@ -20,9 +22,7 @@ import { softwareConfiguration as SoftwareConfigurationModel } from '@prisma/cli
 export class SoftwareConfigurationController {
   constructor(private readonly modelService: SoftwareConfigurationService) {}
 
-  private async getInstanceOr404(
-    id: number,
-  ): Promise<SoftwareConfigurationModel> {
+  private async getInstanceOr404(id: number) {
     const instance: SoftwareConfigurationModel | null =
       await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
@@ -30,20 +30,20 @@ export class SoftwareConfigurationController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string): Promise<SoftwareConfigurationModel> {
+  get(@Param('id') id: string) {
     if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
   @Get()
-  list(): Promise<SoftwareConfigurationModel[]> {
-    return this.modelService.list();
+  list(@Query() params: SoftwareConfigurationPaginationDto) {
+    return this.modelService.list(params);
   }
 
   @Post()
   async create(
     @Body() createSoftwareConfigurationDto: CreateSoftwareConfigurationDto,
-  ): Promise<SoftwareConfigurationModel> {
+  ) {
     const softwareConfigurationModel: SoftwareConfigurationModel =
       await this.modelService.create(createSoftwareConfigurationDto);
     if (!softwareConfigurationModel)
@@ -55,13 +55,13 @@ export class SoftwareConfigurationController {
   async update(
     @Param('id') id: string,
     @Body() updateSoftwareConfigurationDto: UpdateSoftwareConfigurationDto,
-  ): Promise<SoftwareConfigurationModel> {
+  ) {
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateSoftwareConfigurationDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<SoftwareConfigurationModel> {
+  async delete(@Param('id') id: string) {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

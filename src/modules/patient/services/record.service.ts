@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRecordDto, UpdateRecordDto } from '../dto';
+import { CreateRecordDto, RecordPaginationDto, UpdateRecordDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { record } from '@prisma/client';
+import { WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class RecordService {
@@ -17,8 +18,18 @@ export class RecordService {
     });
   }
 
-  list(): Promise<record[]> {
-    return this.record.findMany();
+  async list(params: RecordPaginationDto): Promise<WithPagination<record>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: record[] = await this.record.findMany({
+      ...otherParams,
+      where,
+      include,
+      orderBy: { lastModified: orderBy },
+    });
+    const count: number = await this.record.count(where);
+
+    return { count, data };
   }
 
   create(createRecordDto: CreateRecordDto): Promise<record> {

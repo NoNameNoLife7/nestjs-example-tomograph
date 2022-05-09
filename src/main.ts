@@ -8,6 +8,7 @@ async function bootstrap(): Promise<any> {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      transform: true,
       validationError: { target: true, value: true },
     }),
   );

@@ -8,6 +8,8 @@ import {
 } from 'class-validator';
 
 import { Sex, SkinColor } from '@prisma/client';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { Transform, Type } from 'class-transformer';
 
 export class CreatePatientDto {
   @IsString()
@@ -52,3 +54,20 @@ export class CreatePatientDto {
 }
 
 export class UpdatePatientDto extends CreatePatientDto {}
+
+export class PatientIncludeDTO extends BaseIncludeDTO {
+  tests?: boolean;
+
+  constructor(includeQueryParam: string) {
+    super(includeQueryParam, ['tests']);
+  }
+}
+
+export class PatientPaginationDto extends PaginationDto {
+  @IsOptional()
+  @Transform(({ value }) => new PatientIncludeDTO(value))
+  @Type(() => PatientIncludeDTO)
+  include: PatientIncludeDTO;
+
+  where?: any;
+}

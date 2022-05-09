@@ -8,11 +8,11 @@ import {
   Delete,
   NotFoundException,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { TestService } from '../services';
-import { CreateTestDto, UpdateTestDto } from '../dto';
+import { CreateTestDto, TestPaginationDto, UpdateTestDto } from '../dto';
 import { test as TestModel } from '@prisma/client';
-import { PaginationDto } from 'src/common/utils/utils';
 
 @Controller('test')
 export class TestController {
@@ -25,7 +25,7 @@ export class TestController {
   }
 
   @Get()
-  list(@Body() params: PaginationDto) {
+  list(@Query() params: TestPaginationDto) {
     return this.modelService.list(params);
   }
 

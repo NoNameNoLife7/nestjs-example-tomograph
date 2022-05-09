@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateImageDto, UpdateImageDto } from '../dto';
+import { CreateImageDto, ImagePaginationDto, UpdateImageDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { image } from '@prisma/client';
+import { WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class ImageService {
@@ -17,8 +18,18 @@ export class ImageService {
     });
   }
 
-  list(): Promise<image[]> {
-    return this.image.findMany();
+  async list(params: ImagePaginationDto): Promise<WithPagination<image>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: image[] = await this.image.findMany({
+      ...otherParams,
+      where,
+      include,
+      orderBy: { lastModified: orderBy },
+    });
+    const count: number = await this.image.count(where);
+
+    return { count, data };
   }
 
   create(createImageDto: CreateImageDto): Promise<image> {

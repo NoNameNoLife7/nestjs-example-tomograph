@@ -8,17 +8,12 @@ import {
 } from '../dto';
 */
 
-import {
-  equipmentConfiguration as EquipmentConfigurationModel,
-  //Prisma,
-} from '@prisma/client';
-
 @Controller('equipmentConfiguration')
 export class EquipmentConfigurationController {
   constructor(private readonly modelService: EquipmentConfigurationService) {}
 
   @Get('lastConfiguration')
-  async lastEquipmentConfiguration(): Promise<EquipmentConfigurationModel> {
+  async lastEquipmentConfiguration() {
     const model = await this.modelService.lastConfiguration();
     if (model[0]) return model[0];
     else throw new NotFoundException();
@@ -39,7 +34,7 @@ export class EquipmentConfigurationController {
   // }
 
   // @Get()
-  // list(): Promise<EquipmentConfigurationModel[]> {
+  // list(): Promise<EquipmentConfigurationModel[]> { //fix in case of use in the future
   //   return this.modelService.list();
   // }
 

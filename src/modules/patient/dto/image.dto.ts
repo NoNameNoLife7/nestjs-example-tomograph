@@ -1,3 +1,4 @@
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsDate,
@@ -6,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
 
 export class CreateImageDto {
   @IsOptional()
@@ -25,3 +27,20 @@ export class CreateImageDto {
 }
 
 export class UpdateImageDto extends CreateImageDto {}
+
+export class ImageIncludeDTO extends BaseIncludeDTO {
+  test?: boolean;
+
+  constructor(includeQueryParam: string) {
+    super(includeQueryParam, ['test']);
+  }
+}
+
+export class ImagePaginationDto extends PaginationDto {
+  @IsOptional()
+  @Transform(({ value }) => new ImageIncludeDTO(value))
+  @Type(() => ImageIncludeDTO)
+  include: ImageIncludeDTO;
+
+  where?: any;
+}

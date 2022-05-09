@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleDto, UpdateRoleDto } from '../dto';
+import { CreateRoleDto, RolePaginationDto, UpdateRoleDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { role } from '@prisma/client';
+import { WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class RoleService {
@@ -17,8 +18,18 @@ export class RoleService {
     });
   }
 
-  list(): Promise<role[]> {
-    return this.role.findMany();
+  async list(params: RolePaginationDto): Promise<WithPagination<role>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: role[] = await this.role.findMany({
+      ...otherParams,
+      where,
+      include,
+      orderBy: { lastModified: orderBy },
+    });
+    const count: number = await this.role.count(where);
+
+    return { count, data };
   }
 
   create(createRoleDto: CreateRoleDto): Promise<role> {

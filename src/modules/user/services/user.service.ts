@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from '../dto';
+import { CreateUserDto, UpdateUserDto, UserPaginationDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { user } from '@prisma/client';
+import { WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class UserService {
@@ -17,8 +18,18 @@ export class UserService {
     });
   }
 
-  list(): Promise<user[]> {
-    return this.user.findMany();
+  async list(params: UserPaginationDto): Promise<WithPagination<user>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: user[] = await this.user.findMany({
+      ...otherParams,
+      where,
+      include,
+      orderBy: { lastModified: orderBy },
+    });
+    const count: number = await this.user.count(where);
+
+    return { count, data };
   }
 
   create(createUserDto: CreateUserDto): Promise<user> {

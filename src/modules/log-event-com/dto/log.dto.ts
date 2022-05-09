@@ -1,3 +1,4 @@
+import { Transform, Type } from 'class-transformer';
 import {
   IsDate,
   IsInt,
@@ -5,11 +6,12 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
 
 export class CreateLogDto {
   @IsOptional()
   @IsInt()
-  noEvent?: number;
+  noLog?: number;
 
   @IsOptional()
   @IsNotEmpty()
@@ -29,3 +31,20 @@ export class CreateLogDto {
 }
 
 export class UpdateLogDto extends CreateLogDto {}
+
+class LogIncludeDTO extends BaseIncludeDTO {
+  test?: boolean;
+
+  constructor(includeQueryParam: string) {
+    super(includeQueryParam, ['test']);
+  }
+}
+
+export class LogPaginationDto extends PaginationDto {
+  @IsOptional()
+  @Transform(({ value }) => new LogIncludeDTO(value))
+  @Type(() => LogIncludeDTO)
+  include: LogIncludeDTO;
+
+  where?: any;
+}

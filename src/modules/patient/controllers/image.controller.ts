@@ -8,34 +8,35 @@ import {
   Delete,
   NotFoundException,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ImageService } from '../services';
-import { CreateImageDto, UpdateImageDto } from '../dto';
+import { CreateImageDto, ImagePaginationDto, UpdateImageDto } from '../dto';
 import { image as ImageModel } from '@prisma/client';
 
 @Controller('image')
 export class ImageController {
   constructor(private readonly modelService: ImageService) {}
 
-  private async getInstanceOr404(id: number): Promise<ImageModel> {
+  private async getInstanceOr404(id: number) {
     const instance = await this.modelService.getById(id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string): Promise<ImageModel | null> {
+  get(@Param('id') id: string) {
     if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
   @Get()
-  list(): Promise<ImageModel[]> {
-    return this.modelService.list();
+  list(@Query() params: ImagePaginationDto) {
+    return this.modelService.list(params);
   }
 
   @Post()
-  async create(@Body() createImageDto: CreateImageDto): Promise<ImageModel> {
+  async create(@Body() createImageDto: CreateImageDto) {
     const imageModel: ImageModel = await this.modelService.create(
       createImageDto,
     );
@@ -47,13 +48,13 @@ export class ImageController {
   async update(
     @Param('id') id: string,
     @Body() updateImageDto: UpdateImageDto,
-  ): Promise<ImageModel> {
+  ) {
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateImageDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<ImageModel> {
+  async delete(@Param('id') id: string) {
     await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }

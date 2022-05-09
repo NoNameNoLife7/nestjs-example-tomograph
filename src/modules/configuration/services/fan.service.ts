@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFanDto, UpdateFanDto } from '../dto';
+import { CreateFanDto, FanPaginationDto, UpdateFanDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { fan } from '@prisma/client';
+import { WithPagination } from 'src/common/utils/utils';
 
 @Injectable()
 export class FanService {
@@ -17,8 +18,18 @@ export class FanService {
     });
   }
 
-  list(): Promise<fan[]> {
-    return this.fan.findMany();
+  async list(params: FanPaginationDto): Promise<WithPagination<fan>> {
+    const { orderBy, where, include, ...otherParams } = params;
+
+    const data: fan[] = await this.fan.findMany({
+      ...otherParams,
+      where,
+      include,
+      orderBy: { lastModified: orderBy },
+    });
+    const count: number = await this.fan.count(where);
+
+    return { count, data };
   }
 
   create(createFanDto: CreateFanDto): Promise<fan> {

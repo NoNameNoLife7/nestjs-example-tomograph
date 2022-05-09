@@ -8,16 +8,13 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import {
-  PatientPosition,
-  //softwareConfiguration,
-  //equipmentConfiguration,
-} from '@prisma/client';
-import { Type } from 'class-transformer';
+import { PatientPosition } from '@prisma/client';
+import { Transform, Type } from 'class-transformer';
 import {
   CreateEquipmentConfigurationDto,
   CreateSoftwareConfigurationDto,
 } from 'src/modules/configuration/dto';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
 
 export class CreateTestDto {
   @IsInt()
@@ -48,6 +45,33 @@ export class CreateTestDto {
 }
 
 export class UpdateTestDto extends CreateTestDto {}
+
+export class TestIncludeDTO extends BaseIncludeDTO {
+  images?: boolean;
+  patient?: boolean;
+  softwareConfiguration?: boolean;
+  equipmentConfiguration?: boolean;
+  fan?: boolean;
+
+  constructor(includeQueryParam: string) {
+    super(includeQueryParam, [
+      'images',
+      'patient',
+      'softwareConfiguration',
+      'equipmentConfiguration',
+      'fan',
+    ]);
+  }
+}
+
+export class TestPaginationDto extends PaginationDto {
+  @IsOptional()
+  @Transform(({ value }) => new TestIncludeDTO(value))
+  @Type(() => TestIncludeDTO)
+  include: TestIncludeDTO;
+
+  where?: any;
+}
 
 //partial type
 //crestedAt
