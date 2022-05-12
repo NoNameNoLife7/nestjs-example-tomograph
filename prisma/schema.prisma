@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -42,6 +39,7 @@ model patient {
 
   firstName     String   @db.VarChar(128)
   lastName      String   @db.VarChar(255)
+  date          DateTime
   hospitalCode  String?  @db.VarChar(128)
   comorbidities String?  @db.VarChar(256)
   diagnostic    String?  @db.VarChar(128)

@@ -1,5 +1,3 @@
-/*import { HttpException, HttpStatus } from '@nestjs/common';
-import { Prisma } from '@prisma/client';*/
 import { Type, Transform, TransformationType } from 'class-transformer';
 import { IsIn, IsOptional, IsString } from 'class-validator';
 

@@ -26,7 +26,7 @@ export class CreateTestDto {
   peep?: number;
 
   @IsArray()
-  directory: number[]; //fix
+  directory: number[];
 
   @IsOptional()
   @IsString()
@@ -72,7 +72,3 @@ export class TestPaginationDto extends PaginationDto {
 
   where?: any;
 }
-
-//partial type
-//crestedAt
-//updatedAt

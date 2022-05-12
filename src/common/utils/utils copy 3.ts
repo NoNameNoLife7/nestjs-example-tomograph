@@ -49,5 +49,5 @@ export class PaginationDto {
   )
   include: TestIncludeDTO;
 
-  where: any; //fix
+  where: any;
 }

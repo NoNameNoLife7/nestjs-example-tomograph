@@ -35,8 +35,3 @@ export class PaginationDto {
   @IsIn(['asc', 'desc'])
   orderBy: 'asc' | 'desc';
 }
-
-//estudiar
-//validate nested
-//metaprogramacion
-//reflect

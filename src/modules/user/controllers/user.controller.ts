@@ -54,16 +54,3 @@ export class UserController {
     return this.modelService.delete(+id);
   }
 }
-
-/*  private async serializeResponse(instance: UserModel) {
-  return instance;
-  // const { password, ...restOfFields} = instance
-  // return restOfFields;
-}*/
-
-// private async checkUniqueConstraints(name: string) {
-//   const model = await this.modelService.getUniqueConstrain(name);
-//   if (model)
-//     throw new HttpException('There is already a User with that name!', 500);
-//   return;
-// }

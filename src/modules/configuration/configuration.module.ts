@@ -4,18 +4,10 @@ import {
   FanService,
   SoftwareConfigurationService,
 } from './services';
-import {
-  EquipmentConfigurationController,
-  FanController,
-  //SoftwareConfigurationController,
-} from './controllers';
+import { EquipmentConfigurationController, FanController } from './controllers';
 
 @Module({
-  controllers: [
-    //SoftwareConfigurationController,
-    FanController,
-    EquipmentConfigurationController,
-  ],
+  controllers: [FanController, EquipmentConfigurationController],
   providers: [
     SoftwareConfigurationService,
     FanService,

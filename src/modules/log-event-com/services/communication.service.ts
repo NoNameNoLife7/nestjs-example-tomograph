@@ -19,8 +19,6 @@ export class CommunicationService {
   }
 
   async list(): Promise<WithPagination<communication>> {
-    //const { orderBy, where, ...otherParams } = params;
-
     const data: communication[] = await this.model.findMany();
     const count: number = await this.model.count();
 

@@ -32,10 +32,6 @@ export class CreateUserDto {
   @IsNumber()
   @IsNotEmpty()
   roleId: number;
-
-  // @ValidateNested()
-  // @Type(() => CreateRoleDto)
-  // role: CreateRoleDto;
 }
 
 export class UpdateUserDto extends CreateUserDto {}

@@ -15,20 +15,3 @@ export class CreateCommunicationDto {
 }
 
 export class UpdateCommunicationDto extends CreateCommunicationDto {}
-
-// class CommunicationIncludeDTO extends BaseIncludeDTO {
-//   //test?: boolean;
-
-//   constructor(includeQueryParam: string) {
-//     super(includeQueryParam, []);
-//   }
-// }
-
-// export class CommunicationPaginationDto extends PaginationDto {
-//   @IsOptional()
-//   @Transform(({ value }) => new CommunicationIncludeDTO(value))
-//   @Type(() => CommunicationIncludeDTO)
-//   include: CommunicationIncludeDTO;
-
-//   where?: any;
-// }
