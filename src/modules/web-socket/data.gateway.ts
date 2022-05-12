@@ -1,26 +1,11 @@
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-  WsException,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { test } from '@prisma/client';
-import {
-  InternalServerErrorException,
-  Logger,
-  UseFilters,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
-import { Data } from './data';
+import {SubscribeMessage, WebSocketGateway, WebSocketServer, WsException,} from '@nestjs/websockets';
+import {Server} from 'socket.io';
+import {Logger, UseFilters, UsePipes, ValidationPipe,} from '@nestjs/common';
+import {WebsocketExceptionsFilter} from 'src/common/utils/websocket.exception.filter';
 
-import fs from 'fs';
-import { WebsocketExceptionsFilter } from 'src/common/utils/websocket.exception.filter';
-
-@WebSocketGateway({ path: '/ws/connections' })
+@WebSocketGateway()
 @UseFilters(WebsocketExceptionsFilter)
-@UsePipes(new ValidationPipe({ transform: true }))
+@UsePipes(new ValidationPipe({transform: true}))
 export class DataGateway {
   @WebSocketServer()
   server: Server;
