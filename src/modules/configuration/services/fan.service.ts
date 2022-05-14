@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFanDto, FanPaginationDto, UpdateFanDto } from '../dto';
-import { PrismaService } from '../../../prisma/prisma.service';
-import { fan } from '@prisma/client';
-import { WithPagination } from 'src/common/utils/utils';
+import {Injectable} from '@nestjs/common';
+import {CreateFanDto, FanPaginationDto, UpdateFanDto} from '../dto';
+import {PrismaService} from '../../../prisma/prisma.service';
+import {fan} from '@prisma/client';
+import {WithPagination} from 'src/common/utils/utils';
 
 @Injectable()
 export class FanService {
@@ -25,7 +25,7 @@ export class FanService {
       ...otherParams,
       where,
       include,
-      orderBy: { lastModified: orderBy },
+      orderBy: { updatedAt: orderBy },
     });
     const count: number = await this.fan.count(where);
 

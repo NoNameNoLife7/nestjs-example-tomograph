@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { CreateImageDto, ImagePaginationDto, UpdateImageDto } from '../dto';
-import { PrismaService } from '../../../prisma/prisma.service';
-import { image } from '@prisma/client';
-import { WithPagination } from 'src/common/utils/utils';
+import {Injectable} from '@nestjs/common';
+import {CreateImageDto, ImagePaginationDto, UpdateImageDto} from '../dto';
+import {PrismaService} from '../../../prisma/prisma.service';
+import {image} from '@prisma/client';
+import {WithPagination} from 'src/common/utils/utils';
 
 @Injectable()
 export class ImageService {
@@ -25,7 +25,7 @@ export class ImageService {
       ...otherParams,
       where,
       include,
-      orderBy: { lastModified: orderBy },
+      orderBy: { updatedAt: orderBy },
     });
     const count: number = await this.image.count(where);
 

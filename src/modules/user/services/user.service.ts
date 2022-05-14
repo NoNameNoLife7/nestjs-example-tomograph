@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto, UserPaginationDto } from '../dto';
-import { PrismaService } from '../../../prisma/prisma.service';
-import { user } from '@prisma/client';
-import { WithPagination } from 'src/common/utils/utils';
+import {Injectable} from '@nestjs/common';
+import {CreateUserDto, UpdateUserDto, UserPaginationDto} from '../dto';
+import {PrismaService} from '../../../prisma/prisma.service';
+import {user} from '@prisma/client';
+import {WithPagination} from 'src/common/utils/utils';
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
       ...otherParams,
       where,
       include,
-      orderBy: { lastModified: orderBy },
+      orderBy: { updatedAt: orderBy },
     });
     const count: number = await this.user.count(where);
 

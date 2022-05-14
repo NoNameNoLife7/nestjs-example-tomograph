@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {
   CreateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
   UpdateEquipmentConfigurationDto,
 } from '../dto';
-import { PrismaService } from '../../../prisma/prisma.service';
-import { equipmentConfiguration } from '@prisma/client';
-import { WithPagination } from 'src/common/utils/utils';
+import {PrismaService} from '../../../prisma/prisma.service';
+import {equipmentConfiguration} from '@prisma/client';
+import {WithPagination} from 'src/common/utils/utils';
 
 @Injectable()
 export class EquipmentConfigurationService {
@@ -32,7 +32,7 @@ export class EquipmentConfigurationService {
         ...otherParams,
         where,
         include,
-        orderBy: { lastModified: orderBy },
+        orderBy: { updatedAt: orderBy },
       });
     const count: number = await this.equipmentConfiguration.count(where);
 
@@ -42,7 +42,7 @@ export class EquipmentConfigurationService {
   lastConfiguration(): Promise<equipmentConfiguration[]> {
     return this.equipmentConfiguration.findMany({
       orderBy: {
-        lastModified: 'desc',
+        updatedAt: 'desc',
       },
       take: 1,
     });

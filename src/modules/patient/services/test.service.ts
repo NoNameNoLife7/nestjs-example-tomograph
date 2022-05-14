@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTestDto, TestPaginationDto, UpdateTestDto } from '../dto';
-import { PrismaService } from '../../../prisma/prisma.service';
-import { test } from '@prisma/client';
-import { PaginationDto, WithPagination } from 'src/common/utils/utils';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {CreateTestDto, TestPaginationDto, UpdateTestDto} from '../dto';
+import {PrismaService} from '../../../prisma/prisma.service';
+import {test} from '@prisma/client';
+import {WithPagination} from 'src/common/utils/utils';
 
 @Injectable()
 export class TestService {
@@ -23,7 +23,7 @@ export class TestService {
       ...otherParams,
       where,
       include,
-      orderBy: { lastModified: orderBy },
+      orderBy: { updatedAt: orderBy },
     });
     const count: number = await this.test.count(where);
 

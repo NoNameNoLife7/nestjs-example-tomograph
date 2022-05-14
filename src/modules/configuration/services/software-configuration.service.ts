@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {
   CreateSoftwareConfigurationDto,
   SoftwareConfigurationPaginationDto,
   UpdateSoftwareConfigurationDto,
 } from '../dto';
-import { PrismaService } from '../../../prisma/prisma.service';
-import { softwareConfiguration } from '@prisma/client';
-import { WithPagination } from 'src/common/utils/utils';
+import {PrismaService} from '../../../prisma/prisma.service';
+import {softwareConfiguration} from '@prisma/client';
+import {WithPagination} from 'src/common/utils/utils';
 
 @Injectable()
 export class SoftwareConfigurationService {
@@ -32,7 +32,7 @@ export class SoftwareConfigurationService {
         ...otherParams,
         where,
         include,
-        orderBy: { lastModified: orderBy },
+        orderBy: { updatedAt: orderBy },
       });
     const count: number = await this.softwareConfiguration.count(where);
 
