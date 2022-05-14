@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common';
-import {CreateRecordDto, RecordPaginationDto, UpdateRecordDto} from '../dto';
-import {PrismaService} from '../../../prisma/prisma.service';
-import {record} from '@prisma/client';
-import {WithPagination} from 'src/common/utils/utils';
+import { Injectable } from '@nestjs/common';
+import { CreateRecordDto, RecordPaginationDto, UpdateRecordDto } from '../dto';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { record } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 @Injectable()
 export class RecordService {

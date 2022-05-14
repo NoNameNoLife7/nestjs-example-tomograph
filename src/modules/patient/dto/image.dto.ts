@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export class CreateImageDto {
   @IsOptional()

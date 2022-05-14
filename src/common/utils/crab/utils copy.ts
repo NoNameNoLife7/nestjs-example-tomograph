@@ -1,5 +1,5 @@
-import { Type, Transform, TransformationType } from 'class-transformer';
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { Transform, TransformationType, Type } from 'class-transformer';
+import { IsIn, IsOptional } from 'class-validator';
 
 export type WithPagination<T> = { data: T[]; count: number };
 

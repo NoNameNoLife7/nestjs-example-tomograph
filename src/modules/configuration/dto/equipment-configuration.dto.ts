@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 
 import { Direction } from '@prisma/client';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 import { Transform, Type } from 'class-transformer';
 
 export class CreateEquipmentConfigurationDto {

@@ -1,25 +1,31 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { RoleService } from '../services';
 import { CreateRoleDto, RolePaginationDto, UpdateRoleDto } from '../dto';
 import { role as RoleModel } from '@prisma/client';
+import { httpExceptionHandler } from '../../../common/utils';
 
 @Controller('role')
 export class RoleController {
   constructor(private readonly modelService: RoleService) {}
 
-  private async getInstanceOr404(id: number) {
-    const instance = await this.modelService.getById(id);
+  private async getInstanceOr404(
+    id: number,
+  ): Promise<RoleModel | HttpException> {
+    const instance = await this.modelService
+      .getById(id)
+      .catch((e) => httpExceptionHandler(e));
     if (!instance) throw new NotFoundException();
     return instance;
   }
@@ -32,25 +38,27 @@ export class RoleController {
 
   @Get()
   list(@Query() params: RolePaginationDto) {
-    return this.modelService.list(params);
+    return this.modelService.list(params).catch((e) => httpExceptionHandler(e));
   }
 
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
-    const roleModel: RoleModel = await this.modelService.create(createRoleDto);
+    const roleModel: RoleModel | HttpException = await this.modelService
+      .create(createRoleDto)
+      .catch((e) => httpExceptionHandler(e));
     if (!roleModel) throw new BadRequestException('Invalid role!');
     return roleModel;
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    await this.getInstanceOr404(+id);
-    return this.modelService.update(+id, updateRoleDto);
+  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+    return this.modelService
+      .update(+id, updateRoleDto)
+      .catch((e) => httpExceptionHandler(e));
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    await this.getInstanceOr404(+id);
-    return this.modelService.delete(+id);
+  delete(@Param('id') id: string) {
+    return this.modelService.delete(+id).catch((e) => httpExceptionHandler(e));
   }
 }

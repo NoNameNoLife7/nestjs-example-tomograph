@@ -1,6 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export class CreateFanDto {
   @IsNotEmpty()

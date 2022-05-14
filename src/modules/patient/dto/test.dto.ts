@@ -14,7 +14,7 @@ import {
   CreateEquipmentConfigurationDto,
   CreateSoftwareConfigurationDto,
 } from 'src/modules/configuration/dto';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export class CreateTestDto {
   @IsInt()

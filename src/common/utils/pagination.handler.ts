@@ -5,9 +5,11 @@ import { IsIn, IsNumber, IsOptional } from 'class-validator';
 export type WithPagination<T> = { data: T[]; count: number };
 
 export abstract class BaseIncludeDTO extends Object {
-  constructor(includeQueryParam: string, validIncludeOptions: string[]) {
+  protected constructor(
+    includeQueryParam: string,
+    validIncludeOptions: string[],
+  ) {
     super();
-
     includeQueryParam.split(',').forEach((includeOption) => {
       if (!validIncludeOptions.includes(includeOption)) {
         throw new BadRequestException(

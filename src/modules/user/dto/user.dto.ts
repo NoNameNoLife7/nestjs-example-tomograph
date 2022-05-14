@@ -6,10 +6,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidateNested,
 } from 'class-validator';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
-import { CreateRoleDto } from './role.dto';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export class CreateUserDto {
   @IsEmail()

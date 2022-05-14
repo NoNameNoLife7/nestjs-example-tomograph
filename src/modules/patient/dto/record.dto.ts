@@ -1,6 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export class CreateRecordDto {
   @IsInt()

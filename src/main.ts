@@ -13,6 +13,6 @@ async function bootstrap(): Promise<any> {
   });
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(validationPipe);
-  await app.listen(3003);
+  await app.listen(3000);
 }
 bootstrap();

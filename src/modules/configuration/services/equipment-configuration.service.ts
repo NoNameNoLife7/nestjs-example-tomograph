@@ -1,12 +1,12 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
   UpdateEquipmentConfigurationDto,
 } from '../dto';
-import {PrismaService} from '../../../prisma/prisma.service';
-import {equipmentConfiguration} from '@prisma/client';
-import {WithPagination} from 'src/common/utils/utils';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { equipmentConfiguration } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 @Injectable()
 export class EquipmentConfigurationService {

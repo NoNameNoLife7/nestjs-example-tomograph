@@ -1,8 +1,16 @@
-import {IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString,} from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-import {Sex, SkinColor} from '@prisma/client';
-import {BaseIncludeDTO, PaginationDto} from 'src/common/utils/utils';
-import {Transform, Type} from 'class-transformer';
+import { Sex, SkinColor } from '@prisma/client';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
+import { Transform, Type } from 'class-transformer';
 
 export class CreatePatientDto {
   @IsString()

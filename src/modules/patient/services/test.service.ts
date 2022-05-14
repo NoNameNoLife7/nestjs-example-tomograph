@@ -1,8 +1,8 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {CreateTestDto, TestPaginationDto, UpdateTestDto} from '../dto';
-import {PrismaService} from '../../../prisma/prisma.service';
-import {test} from '@prisma/client';
-import {WithPagination} from 'src/common/utils/utils';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateTestDto, TestPaginationDto, UpdateTestDto } from '../dto';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { test } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 @Injectable()
 export class TestService {

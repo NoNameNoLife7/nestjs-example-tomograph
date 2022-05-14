@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCommunicationDto, UpdateCommunicationDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { communication } from '@prisma/client';
-import { WithPagination } from 'src/common/utils/utils';
+import { WithPagination } from 'src/common/utils';
 
 @Injectable()
 export class CommunicationService {

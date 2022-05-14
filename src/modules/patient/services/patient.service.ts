@@ -1,8 +1,12 @@
-import {Injectable} from '@nestjs/common';
-import {CreatePatientDto, PatientPaginationDto, UpdatePatientDto,} from '../dto';
-import {PrismaService} from '../../../prisma/prisma.service';
-import {patient} from '@prisma/client';
-import {WithPagination} from 'src/common/utils/utils';
+import { Injectable } from '@nestjs/common';
+import {
+  CreatePatientDto,
+  PatientPaginationDto,
+  UpdatePatientDto,
+} from '../dto';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { patient } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 @Injectable()
 export class PatientService {

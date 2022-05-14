@@ -1,7 +1,7 @@
 import { IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
 import { Language } from '@prisma/client';
-import { BaseIncludeDTO, PaginationDto } from 'src/common/utils/utils';
+import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 import { Transform, Type } from 'class-transformer';
 
 export class CreateSoftwareConfigurationDto {

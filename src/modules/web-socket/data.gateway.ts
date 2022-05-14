@@ -1,11 +1,16 @@
-import {SubscribeMessage, WebSocketGateway, WebSocketServer, WsException,} from '@nestjs/websockets';
-import {Server} from 'socket.io';
-import {Logger, UseFilters, UsePipes, ValidationPipe,} from '@nestjs/common';
-import {WebsocketExceptionsFilter} from 'src/common/utils/websocket.exception.filter';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  WsException,
+} from '@nestjs/websockets';
+import { Server } from 'socket.io';
+import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { WebsocketExceptionsFilter } from 'src/common/utils/websocket.exception.filter';
 
 @WebSocketGateway()
 @UseFilters(WebsocketExceptionsFilter)
-@UsePipes(new ValidationPipe({transform: true}))
+@UsePipes(new ValidationPipe({ transform: true }))
 export class DataGateway {
   @WebSocketServer()
   server: Server;
@@ -37,6 +42,7 @@ export class DataGateway {
     console.log('startRecording');
     try {
       this.isRecording = true;
+      return 'conectado';
     } catch (e) {
       console.log('error startRecording');
       throw new WsException(e);
