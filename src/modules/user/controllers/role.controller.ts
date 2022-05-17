@@ -20,20 +20,14 @@ import { httpExceptionHandler } from '../../../common/utils';
 export class RoleController {
   constructor(private readonly modelService: RoleService) {}
 
-  private async getInstanceOr404(
-    id: number,
-  ): Promise<RoleModel | HttpException> {
+  @Get(':id')
+  async getById(@Param('id') id: string) {
+    if (!+id) throw new NotFoundException();
     const instance = await this.modelService
-      .getById(id)
+      .getById(+id)
       .catch((e) => httpExceptionHandler(e));
     if (!instance) throw new NotFoundException();
     return instance;
-  }
-
-  @Get(':id')
-  getById(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
-    return this.getInstanceOr404(+id);
   }
 
   @Get()

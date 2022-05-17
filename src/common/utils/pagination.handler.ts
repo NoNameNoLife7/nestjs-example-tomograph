@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export type WithPagination<T> = { data: T[]; count: number };
 
@@ -36,4 +36,8 @@ export class PaginationDto {
   @IsOptional()
   @IsIn(['asc', 'desc'])
   orderBy: 'asc' | 'desc';
+
+  @IsOptional()
+  @IsString()
+  where?: any;
 }

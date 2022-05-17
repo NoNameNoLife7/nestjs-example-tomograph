@@ -6,11 +6,11 @@ import { UserModule } from './modules/user/user.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { LogEventComModule } from './modules/log-event-com/log-event-com.module';
 import { ConfigurationModule } from './modules/configuration/configuration.module';
-import { WebSocketModule } from './modules/web-socket/web-socket.module';
+import { WebsocketModule } from './modules/web-socket/websocket.module';
 
 @Module({
   imports: [
-    WebSocketModule,
+    WebsocketModule,
     PrismaModule,
     UserModule,
     PatientModule,

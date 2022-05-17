@@ -69,6 +69,4 @@ export class TestPaginationDto extends PaginationDto {
   @Transform(({ value }) => new TestIncludeDTO(value))
   @Type(() => TestIncludeDTO)
   include: TestIncludeDTO;
-
-  where?: any;
 }

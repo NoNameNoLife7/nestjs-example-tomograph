@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap(): Promise<any> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const validationPipe = new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
@@ -13,6 +13,6 @@ async function bootstrap(): Promise<any> {
   });
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(validationPipe);
-  await app.listen(3000);
+  await app.listen(3003);
 }
 bootstrap();
