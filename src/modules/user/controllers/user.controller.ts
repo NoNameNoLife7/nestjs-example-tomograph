@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../services';
 import { CreateUserDto, UpdateUserDto, UserPaginationDto } from '../dto';
-import { httpExceptionHandler } from 'src/common/utils';
 
 @Controller('user')
 export class UserController {
@@ -19,41 +18,28 @@ export class UserController {
 
   @Get(':id')
   async get(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
-    const instance = await this.modelService
-      .getById(+id)
-      .catch((e) => httpExceptionHandler(e));
+    const instance = await this.modelService.getById(+id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get()
   async list(@Query() params: UserPaginationDto) {
-    return await this.modelService
-      .list(params)
-      .catch((e) => httpExceptionHandler(e));
+    return await this.modelService.list(params);
   }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.modelService
-      .create(createUserDto)
-      .catch((e) => httpExceptionHandler(e));
+    return await this.modelService.create(createUserDto);
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    if (!+id) throw new NotFoundException();
-    return await this.modelService
-      .update(+id, updateUserDto)
-      .catch((e) => httpExceptionHandler(e));
+    return await this.modelService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
-    return await this.modelService
-      .delete(+id)
-      .catch((e) => httpExceptionHandler(e));
+    return await this.modelService.delete(+id);
   }
 }

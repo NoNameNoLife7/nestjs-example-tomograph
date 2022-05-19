@@ -4,4 +4,4 @@ export {
   BaseIncludeDTO,
 } from './pagination.handler';
 export { WebsocketExceptionsFilter } from './websocket.exception.filter';
-export { httpExceptionHandler } from './http.exception.handler';
+export { HttpExceptionFilter } from './http.exception.handler';

@@ -1,0 +1,122 @@
+import {
+  Request,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Req,
+  Patch,
+  Delete,
+} from '@nestjs/common';
+import axios, { Method, AxiosRequestConfig } from 'axios';
+
+@Controller('proxy')
+export class ProxyServerController {
+  async proxy(request: Request, data: any) {
+    try {
+      const axiosConfig: AxiosRequestConfig = {
+        url: request.url.slice('/proxy/'.length),
+        method: request.method as Method,
+        baseURL: 'http://localhost:8348/api',
+        data,
+      };
+      return (await axios.request(axiosConfig)).data;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  //devices
+  @Get('devices')
+  listDevices(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+
+  @Get('devices/:id')
+  getDevice(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+
+  @Get('devices/:id/ping')
+  getDevicePing(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+  // end devices
+
+  // connections
+  @Get('connections')
+  listConnections(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+  @Get('connections/:id')
+  getConnectionDetails(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+  @Post('connections')
+  connectToDevice(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+
+  @Put('connections/:id')
+  updateConnection(
+    @Req() request: Request,
+    @Body()
+    data: {
+      polling?: string;
+      notifyBuffers?: boolean;
+      notifyImpedance?: boolean;
+      onlineImpedance?: boolean;
+      notifySnr?: boolean;
+    },
+  ) {
+    return this.proxy(request, data);
+  }
+
+  @Get('connections/:id/buffer')
+  getRecordingBuffer(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+
+  @Get('connections/:id/stream')
+  getStreamData(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+  @Get('connections/:id/impedance')
+  getImpedance(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+  @Get('connections/:id/snr')
+  getSNR(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+
+  @Patch('connections/:id/start')
+  updateModeConnection(
+    @Req() request: Request,
+    @Body()
+    data: {
+      mode: 'Recording' | 'Impedance' | 'Calibration' | 'Autocalibration';
+    },
+  ) {
+    return this.proxy(request, data);
+  }
+  @Patch('connections/:id/stop')
+  stopModeConnection(@Req() request: Request, @Body() data: any) {
+    return this.proxy(request, data);
+  }
+
+  @Delete('connections/:id')
+  async disconnect(@Req() request: Request, @Body() data: any) {
+    const res = await this.proxy(request, data);
+    if (res.code === 404) return res;
+    return 'Disconnected successfully';
+  }
+
+  @Delete('connections')
+  async disconnectAll(@Req() request: Request, @Body() data: any) {
+    const res = await this.proxy(request, data);
+    if (res.code === 404) return res;
+    return 'Close All connections';
+  }
+  //end connections
+}

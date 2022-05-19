@@ -14,7 +14,6 @@ import {
 import { RoleService } from '../services';
 import { CreateRoleDto, RolePaginationDto, UpdateRoleDto } from '../dto';
 import { role as RoleModel } from '@prisma/client';
-import { httpExceptionHandler } from '../../../common/utils';
 
 @Controller('role')
 export class RoleController {
@@ -22,37 +21,32 @@ export class RoleController {
 
   @Get(':id')
   async getById(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
-    const instance = await this.modelService
-      .getById(+id)
-      .catch((e) => httpExceptionHandler(e));
+    const instance = await this.modelService.getById(+id);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get()
   list(@Query() params: RolePaginationDto) {
-    return this.modelService.list(params).catch((e) => httpExceptionHandler(e));
+    return this.modelService.list(params);
   }
 
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
-    const roleModel: RoleModel | HttpException = await this.modelService
-      .create(createRoleDto)
-      .catch((e) => httpExceptionHandler(e));
+    const roleModel: RoleModel | HttpException = await this.modelService.create(
+      createRoleDto,
+    );
     if (!roleModel) throw new BadRequestException('Invalid role!');
     return roleModel;
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.modelService
-      .update(+id, updateRoleDto)
-      .catch((e) => httpExceptionHandler(e));
+    return this.modelService.update(+id, updateRoleDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.modelService.delete(+id).catch((e) => httpExceptionHandler(e));
+    return this.modelService.delete(+id);
   }
 }

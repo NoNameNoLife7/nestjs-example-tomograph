@@ -26,7 +26,6 @@ export class ImageController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -49,13 +48,11 @@ export class ImageController {
     @Param('id') id: string,
     @Body() updateImageDto: UpdateImageDto,
   ) {
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateImageDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

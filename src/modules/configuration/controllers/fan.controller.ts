@@ -26,7 +26,6 @@ export class FanController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -44,13 +43,11 @@ export class FanController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateFanDto: UpdateFanDto) {
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateFanDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

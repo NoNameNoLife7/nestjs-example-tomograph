@@ -28,7 +28,6 @@ export class EventController {
 
   @Get(':id')
   get(@Param('id') id: string): Promise<EventModel | null> {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -51,13 +50,11 @@ export class EventController {
     @Param('id') id: string,
     @Body() updateEventDto: UpdateData,
   ): Promise<EventModel> {
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateEventDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<EventModel> {
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

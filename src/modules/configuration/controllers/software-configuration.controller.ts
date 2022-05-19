@@ -31,7 +31,6 @@ export class SoftwareConfigurationController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -56,13 +55,11 @@ export class SoftwareConfigurationController {
     @Param('id') id: string,
     @Body() updateSoftwareConfigurationDto: UpdateSoftwareConfigurationDto,
   ) {
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateSoftwareConfigurationDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

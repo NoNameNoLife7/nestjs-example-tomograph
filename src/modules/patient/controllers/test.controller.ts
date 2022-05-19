@@ -31,7 +31,6 @@ export class TestController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -44,13 +43,11 @@ export class TestController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateTestDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

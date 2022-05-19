@@ -28,7 +28,6 @@ export class LogController {
 
   @Get(':id')
   get(@Param('id') id: string): Promise<LogModel | null> {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -51,13 +50,11 @@ export class LogController {
     @Param('id') id: string,
     @Body() updateLogDto: UpdateData,
   ): Promise<LogModel> {
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateLogDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<LogModel> {
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

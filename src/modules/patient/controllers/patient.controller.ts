@@ -30,7 +30,6 @@ export class PatientController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
     return this.getInstanceOr404(+id);
   }
 
@@ -53,15 +52,11 @@ export class PatientController {
     @Param('id') id: string,
     @Body() updatePatientDto: UpdatePatientDto,
   ) {
-    if (!+id) throw new NotFoundException();
-    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updatePatientDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    if (!+id) throw new NotFoundException();
-    await this.getInstanceOr404(+id);
     return this.modelService.delete(+id);
   }
 }

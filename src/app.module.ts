@@ -7,6 +7,7 @@ import { PatientModule } from './modules/patient/patient.module';
 import { LogEventComModule } from './modules/log-event-com/log-event-com.module';
 import { ConfigurationModule } from './modules/configuration/configuration.module';
 import { WebsocketModule } from './modules/web-socket/websocket.module';
+import { ProxyServerModule } from './modules/proxy-config-server/proxy.server.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { WebsocketModule } from './modules/web-socket/websocket.module';
     PatientModule,
     LogEventComModule,
     ConfigurationModule,
+    ProxyServerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
