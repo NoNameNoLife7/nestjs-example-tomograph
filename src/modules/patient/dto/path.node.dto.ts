@@ -1,9 +1,10 @@
 import { Transform, Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export class CreatePathNodeDto {
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsOptional()

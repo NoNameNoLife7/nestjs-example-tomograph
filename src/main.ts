@@ -7,6 +7,7 @@ import { HttpExceptionFilter } from './common/utils/';
 async function bootstrap(): Promise<any> {
   const app = await NestFactory.create(AppModule, { cors: true });
   const validationPipe = new ValidationPipe({
+    whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
     validationError: { target: true, value: true },

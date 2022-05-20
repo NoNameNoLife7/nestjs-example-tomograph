@@ -35,12 +35,10 @@ export class CreateTestDto {
   @IsEnum(PatientPosition)
   position: PatientPosition;
 
-  //@IsOptional()
   @ValidateNested()
   @Type(() => CreateSoftwareConfigurationDto)
   softwareConfiguration: CreateSoftwareConfigurationDto;
 
-  //@IsOptional()
   @ValidateNested()
   @Type(() => CreateEquipmentConfigurationDto)
   equipmentConfiguration: CreateEquipmentConfigurationDto;

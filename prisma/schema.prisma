@@ -115,7 +115,7 @@ model image {
 
 model pathNode {
   id       Int        @id @default(autoincrement())
-  name     String
+  name     String @unique
   parentId Int?
   parent   pathNode?  @relation("parenthood", fields: [parentId], references: [id])
   children pathNode[] @relation("parenthood")
