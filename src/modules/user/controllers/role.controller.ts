@@ -21,6 +21,7 @@ export class RoleController {
 
   @Get(':id')
   async getById(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     const instance = await this.modelService.getById(+id);
     if (!instance) throw new NotFoundException();
     return instance;
@@ -42,11 +43,13 @@ export class RoleController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.update(+id, updateRoleDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

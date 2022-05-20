@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import {
-  PatientService,
   ImageService,
+  PathNodeService,
+  PatientService,
   RecordService,
   TestService,
 } from './services';
 import {
-  PatientController,
   ImageController,
+  PathNodeController,
+  PatientController,
   RecordController,
   TestController,
 } from './controllers';
@@ -20,7 +22,14 @@ import { ConfigurationModule } from '../configuration/configuration.module';
     ImageController,
     RecordController,
     TestController,
+    PathNodeController,
   ],
-  providers: [PatientService, ImageService, RecordService, TestService],
+  providers: [
+    PatientService,
+    ImageService,
+    RecordService,
+    TestService,
+    PathNodeService,
+  ],
 })
 export class PatientModule {}

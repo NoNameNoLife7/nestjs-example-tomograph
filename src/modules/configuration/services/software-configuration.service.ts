@@ -21,7 +21,14 @@ export class SoftwareConfigurationService {
       where: { id },
     });
   }
-
+  getLastSoftwareConfiguration(): Promise<softwareConfiguration[]> {
+    return this.softwareConfiguration.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+      take: 1,
+    });
+  }
   async list(
     params: SoftwareConfigurationPaginationDto,
   ): Promise<WithPagination<softwareConfiguration>> {

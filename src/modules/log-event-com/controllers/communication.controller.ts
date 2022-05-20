@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { CommunicationService } from '../services';
 import { CreateCommunicationDto, UpdateCommunicationDto } from '../dto';
@@ -25,6 +25,7 @@ export class CommunicationController {
 
   @Get(':id')
   get(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -53,6 +54,7 @@ export class CommunicationController {
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

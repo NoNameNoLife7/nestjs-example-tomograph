@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { ImageService } from '../services';
@@ -26,6 +26,7 @@ export class ImageController {
 
   @Get(':id')
   get(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -48,11 +49,13 @@ export class ImageController {
     @Param('id') id: string,
     @Body() updateImageDto: UpdateImageDto,
   ) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.update(+id, updateImageDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

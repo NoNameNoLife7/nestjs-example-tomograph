@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { FanService } from '../services';
@@ -26,6 +26,7 @@ export class FanController {
 
   @Get(':id')
   get(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -42,12 +43,14 @@ export class FanController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateFanDto: UpdateFanDto) {
-    return this.modelService.update(+id, updateFanDto);
+  async update(@Param('id') id: string, @Body() updateDto: UpdateFanDto) {
+    if (!+id) throw new BadRequestException('The id must be a number');
+    return this.modelService.update(+id, updateDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

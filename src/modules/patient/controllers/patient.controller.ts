@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { PatientService } from '../services';
@@ -30,6 +30,7 @@ export class PatientController {
 
   @Get(':id')
   get(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -52,11 +53,13 @@ export class PatientController {
     @Param('id') id: string,
     @Body() updatePatientDto: UpdatePatientDto,
   ) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.update(+id, updatePatientDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

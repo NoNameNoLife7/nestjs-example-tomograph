@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { LogService } from '../services';
 import { CreateLogDto, UpdateLogDto } from '../dto';
@@ -28,6 +28,7 @@ export class LogController {
 
   @Get(':id')
   get(@Param('id') id: string): Promise<LogModel | null> {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -55,6 +56,7 @@ export class LogController {
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<LogModel> {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

@@ -5,9 +5,14 @@ import {
   SoftwareConfigurationService,
 } from './services';
 import { EquipmentConfigurationController, FanController } from './controllers';
+import { SoftwareConfigurationController } from './controllers/software-configuration.controller';
 
 @Module({
-  controllers: [FanController, EquipmentConfigurationController],
+  controllers: [
+    FanController,
+    EquipmentConfigurationController,
+    SoftwareConfigurationController,
+  ],
   providers: [
     SoftwareConfigurationService,
     FanService,

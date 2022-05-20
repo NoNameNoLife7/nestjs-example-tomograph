@@ -22,3 +22,9 @@ export {
   RecordIncludeDTO,
   RecordPaginationDto,
 } from './record.dto';
+export {
+  CreatePathNodeDto,
+  UpdatePathNodeDto,
+  PathNodeIncludeDTO,
+  PathNodePaginationDto,
+} from './path.node.dto';

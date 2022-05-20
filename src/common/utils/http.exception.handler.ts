@@ -1,40 +1,42 @@
+import { ArgumentsHost, ExceptionFilter, HttpException } from '@nestjs/common';
+import { Response } from 'express';
 import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime';
 
-@Catch(HttpException, PrismaClientKnownRequestError)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(
-    exception: HttpException | PrismaClientKnownRequestError,
+    exception:
+      | HttpException
+      | PrismaClientKnownRequestError
+      | PrismaClientValidationError,
     host: ArgumentsHost,
   ) {
+    console.log(typeof exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
     let status = 500;
-    let message = 'Error';
+
+    let message = exception.message;
+
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       message = exception.message;
-    } else {
+    } else if (exception instanceof PrismaClientKnownRequestError) {
       if (exception.code === 'P2002') {
-        status = 405;
+        status = 400;
         message = 'There is a unique constraint violation';
       } else if (exception.code === 'P2025') {
         status = 404;
         message = 'Not found!';
       }
+    } else {
+      message = exception.message;
     }
     response.status(status).json({
       statusCode: status,
       message: message,
-      timestamp: new Date().toISOString(),
-      path: request.url,
     });
   }
 }

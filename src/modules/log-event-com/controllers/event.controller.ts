@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { EventService } from '../services';
 import { CreateEventDto, UpdateEventDto } from '../dto';
@@ -28,6 +28,7 @@ export class EventController {
 
   @Get(':id')
   get(@Param('id') id: string): Promise<EventModel | null> {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -55,6 +56,7 @@ export class EventController {
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<EventModel> {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { SoftwareConfigurationService } from '../services';
@@ -22,6 +22,19 @@ import { softwareConfiguration as SoftwareConfigurationModel } from '@prisma/cli
 export class SoftwareConfigurationController {
   constructor(private readonly modelService: SoftwareConfigurationService) {}
 
+  @Get('lastSoftwareConfiguration')
+  async lastSoftwareConfiguration() {
+    const model: SoftwareConfigurationModel[] =
+      await this.modelService.getLastSoftwareConfiguration();
+    if (!model[0]) {
+      model[0] = await this.create({
+        brightness: 100,
+        language: 'ES',
+      });
+    }
+    return model;
+  }
+
   private async getInstanceOr404(id: number) {
     const instance: SoftwareConfigurationModel | null =
       await this.modelService.getById(id);
@@ -31,6 +44,8 @@ export class SoftwareConfigurationController {
 
   @Get(':id')
   get(@Param('id') id: string) {
+    console.log(parseInt(id));
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id);
   }
 
@@ -60,6 +75,7 @@ export class SoftwareConfigurationController {
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.delete(+id);
   }
 }

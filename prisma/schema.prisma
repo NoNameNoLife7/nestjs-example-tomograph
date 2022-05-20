@@ -114,14 +114,13 @@ model image {
 }
 
 model pathNode {
-  id Int @id @default(autoincrement())
-
-  parentId Int
-
-  parent pathNode @relation("parenthood", fields: [parentId], references: [id])
-
+  id       Int        @id @default(autoincrement())
+  name     String
+  parentId Int?
+  parent   pathNode?  @relation("parenthood", fields: [parentId], references: [id])
   children pathNode[] @relation("parenthood")
 
+  tests test[]
 }
 
 model equipmentConfiguration {
@@ -190,6 +189,8 @@ model test {
 
   equipmentConfiguration   equipmentConfiguration @relation(fields: [equipmentConfigurationId], references: [id])
   equipmentConfigurationId Int                    @unique
+
+  pathNodes pathNode[]
 }
 
 model record {

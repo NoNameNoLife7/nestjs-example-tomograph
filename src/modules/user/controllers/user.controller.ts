@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -18,6 +19,7 @@ export class UserController {
 
   @Get(':id')
   async get(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     const instance = await this.modelService.getById(+id);
     if (!instance) throw new NotFoundException();
     return instance;
@@ -35,11 +37,13 @@ export class UserController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return await this.modelService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    if (!+id) throw new BadRequestException('The id must be a number');
     return await this.modelService.delete(+id);
   }
 }
