@@ -56,20 +56,6 @@ model patient {
   tests test[]
 }
 
-model softwareConfiguration {
-  id Int @id @default(autoincrement())
-
-  dateTime   DateTime? @default(now())
-  brightness Float?
-
-  language Language @default(ES)
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-
-  test test?
-}
-
 model fan {
   id Int @id @default(autoincrement())
 
@@ -115,7 +101,7 @@ model image {
 
 model pathNode {
   id       Int        @id @default(autoincrement())
-  name     String @unique
+  name     String     @unique
   parentId Int?
   parent   pathNode?  @relation("parenthood", fields: [parentId], references: [id])
   children pathNode[] @relation("parenthood")
@@ -126,10 +112,24 @@ model pathNode {
 model equipmentConfiguration {
   id                 Int       @id @default(autoincrement())
   adjacent           Boolean?  @default(true)
-  injectionFrequency Float?
-  samplingRate       Float?
+  injectionFrequency Int?      @default(60)
+  samplingRate       Int?      @default(15)
   direction          Direction
-  jump               Int?      @default(0)
+  jump               Int?      @default(1)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  test test?
+}
+
+model softwareConfiguration {
+  id Int @id @default(autoincrement())
+
+  dateTime   DateTime? @default(now())
+
+  brightness Float
+  language Language @default(ES)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt

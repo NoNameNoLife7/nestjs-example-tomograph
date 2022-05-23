@@ -8,6 +8,8 @@ export {
   CreateEquipmentConfigurationDto,
   UpdateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
+  arrayFreq,
+  arraySamp,
 } from './equipment-configuration.dto';
 export {
   CreatePathNodeDto,

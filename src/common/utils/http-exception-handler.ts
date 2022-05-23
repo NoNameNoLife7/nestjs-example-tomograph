@@ -1,26 +1,14 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
 } from '@prisma/client/runtime';
 
-@Catch(
-  PrismaClientKnownRequestError,
-  PrismaClientValidationError,
-  //ValidationError,
-)
+@Catch(PrismaClientKnownRequestError, PrismaClientValidationError)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(
-    exception:
-      | HttpException
-      | PrismaClientKnownRequestError
-      | PrismaClientValidationError,
+    exception: PrismaClientKnownRequestError | PrismaClientValidationError,
     host: ArgumentsHost,
   ) {
     const ctx = host.switchToHttp();
@@ -29,9 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let message: string | object = exception.message;
 
-    if (exception instanceof HttpException) {
-      status = exception.getStatus();
-    } else if (exception instanceof PrismaClientKnownRequestError) {
+    if (exception instanceof PrismaClientKnownRequestError) {
       if (exception.code === 'P2002') {
         status = 400;
         message = {

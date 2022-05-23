@@ -3,23 +3,25 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
-  IsString,
 } from 'class-validator';
 
 import { Direction } from '@prisma/client';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 import { Transform, Type } from 'class-transformer';
 
+export const arrayFreq: number[] = [50, 60];
+export const arraySamp: number[] = [10, 15, 25];
+
 export class CreateEquipmentConfigurationDto {
   @IsOptional()
   @IsBoolean()
-  adjacent: boolean | null;
+  adjacent?: boolean;
 
   @IsOptional()
-  @IsNumber()
-  injectionFrequency: number | null;
+  @IsInt()
+  @IsEnum(arrayFreq)
+  injectionFrequency?: number;
 
   @IsEnum(Direction)
   @IsNotEmpty()
@@ -27,8 +29,12 @@ export class CreateEquipmentConfigurationDto {
 
   @IsOptional()
   @IsInt()
-  @IsString()
-  jump: number | null;
+  jump?: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsEnum(arraySamp)
+  samplingRate?: number;
 }
 
 export class UpdateEquipmentConfigurationDto extends CreateEquipmentConfigurationDto {}

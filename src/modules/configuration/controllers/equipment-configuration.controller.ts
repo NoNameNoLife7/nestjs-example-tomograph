@@ -16,6 +16,8 @@ import {
   equipmentConfiguration,
 } from '@prisma/client';
 import {
+  arrayFreq,
+  arraySamp,
   CreateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
   UpdateEquipmentConfigurationDto,
@@ -33,11 +35,18 @@ export class EquipmentConfigurationController {
       model[0] = await this.create({
         adjacent: false,
         direction: 'IZQ_DER',
-        injectionFrequency: null,
-        jump: null,
       });
-
     return model;
+  }
+
+  @Get('injectionFrequency')
+  getInyectionFequency() {
+    return arrayFreq;
+  }
+
+  @Get('samplingRate')
+  getSamplingRate() {
+    return arraySamp;
   }
 
   private async getInstanceOr404(id: number) {

@@ -1,13 +1,23 @@
-import { IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 import { Language } from '@prisma/client';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 import { Transform, Type } from 'class-transformer';
 
 export class CreateSoftwareConfigurationDto {
+  @IsNumber()
+  brightness: number;
+
   @IsOptional()
-  @IsInt()
-  brightness: number | null;
+  @IsDate()
+  @IsNotEmpty()
+  dateTime?: Date;
 
   @IsEnum(Language)
   @IsNotEmpty()
