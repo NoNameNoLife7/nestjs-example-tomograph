@@ -42,15 +42,20 @@ export class PathNodeService {
   }
 
   create(createPathNodeDto: CreatePathNodeDto): Promise<pathNode> {
+    const { tests, parentId, ...nonForeignRelationFields } = createPathNodeDto;
     return this.pathNode.create({
-      data: createPathNodeDto,
+      data: {
+        ...nonForeignRelationFields,
+        parent: { connect: { id: parentId } },
+      },
     });
   }
 
   update(id: number, updatePathNodeDto: UpdatePathNodeDto): Promise<pathNode> {
+    const { tests, parentId, ...nonForeignRelationFields } = updatePathNodeDto;
     return this.pathNode.update({
       where: { id },
-      data: updatePathNodeDto,
+      data: { ...nonForeignRelationFields },
     });
   }
 

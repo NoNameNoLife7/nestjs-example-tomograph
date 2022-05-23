@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
-import { WebsocketExceptionsFilter } from 'src/common/utils/websocket.exception.filter';
+import { WebsocketExceptionsFilter } from 'src/common/utils/websocket-exception-filter';
 
 @WebSocketGateway()
 @UseFilters(WebsocketExceptionsFilter)

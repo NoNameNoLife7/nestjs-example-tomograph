@@ -38,6 +38,8 @@ export class TestService {
     const {
       softwareConfiguration,
       equipmentConfiguration,
+      softwareConfigurationId,
+      equipmentConfigurationId,
       ...nonForeignRelationFields
     } = createTestDto;
 
@@ -45,10 +47,16 @@ export class TestService {
       data: {
         ...nonForeignRelationFields,
         softwareConfiguration: {
-          create: softwareConfiguration,
+          connectOrCreate: {
+            create: softwareConfiguration,
+            where: { id: softwareConfigurationId },
+          },
         },
         equipmentConfiguration: {
-          create: equipmentConfiguration,
+          connectOrCreate: {
+            create: equipmentConfiguration,
+            where: { id: equipmentConfigurationId },
+          },
         },
       },
     });
@@ -61,6 +69,8 @@ export class TestService {
     const {
       softwareConfiguration,
       equipmentConfiguration,
+      softwareConfigurationId,
+      equipmentConfigurationId,
       ...nonForeignRelationFields
     } = updateTestDto;
 
@@ -69,10 +79,14 @@ export class TestService {
       data: {
         ...nonForeignRelationFields,
         softwareConfiguration: {
-          update: softwareConfiguration,
+          update: softwareConfiguration
+            ? softwareConfiguration
+            : softwareConfigurationId,
         },
         equipmentConfiguration: {
-          update: equipmentConfiguration,
+          update: equipmentConfiguration
+            ? equipmentConfiguration
+            : equipmentConfigurationId,
         },
       },
     });

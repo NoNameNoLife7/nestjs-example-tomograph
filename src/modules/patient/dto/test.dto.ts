@@ -3,8 +3,10 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -35,10 +37,22 @@ export class CreateTestDto {
   @IsEnum(PatientPosition)
   position: PatientPosition;
 
+  @IsOptional()
+  @IsInt()
+  softwareConfigurationId?: number;
+
+  @ValidateIf((obj: CreateTestDto) => !obj.softwareConfigurationId)
+  @IsObject()
   @ValidateNested()
   @Type(() => CreateSoftwareConfigurationDto)
   softwareConfiguration: CreateSoftwareConfigurationDto;
 
+  @IsOptional()
+  @IsInt()
+  equipmentConfigurationId?: number;
+
+  @ValidateIf((obj: CreateTestDto) => !obj.equipmentConfigurationId)
+  @IsObject()
   @ValidateNested()
   @Type(() => CreateEquipmentConfigurationDto)
   equipmentConfiguration: CreateEquipmentConfigurationDto;

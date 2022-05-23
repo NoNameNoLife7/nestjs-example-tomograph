@@ -1,6 +1,15 @@
+import { test } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
+import { CreateTestDto } from './test.dto';
 
 export class CreatePathNodeDto {
   @IsString()
@@ -9,16 +18,24 @@ export class CreatePathNodeDto {
 
   @IsOptional()
   @IsInt()
-  parentId: number;
+  parentId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateTestDto)
+  tests: test[];
 }
 
 export class UpdatePathNodeDto extends CreatePathNodeDto {}
 
 export class PathNodeIncludeDTO extends BaseIncludeDTO {
   tests?: boolean;
+  parent?: boolean;
+  children?: boolean;
 
   constructor(includeQueryParam: string) {
-    super(includeQueryParam, ['tests']);
+    super(includeQueryParam, ['tests', 'parent', 'children']);
   }
 }
 

@@ -9,12 +9,11 @@ import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
 } from '@prisma/client/runtime';
-import { ValidationError } from 'class-validator';
 
 @Catch(
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
-  ValidationError,
+  //ValidationError,
 )
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(
@@ -32,16 +31,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
-      //message = exception.message;
     } else if (exception instanceof PrismaClientKnownRequestError) {
       if (exception.code === 'P2002') {
         status = 400;
-        // message = 'There is a unique constraint violation';
+        message = {
+          error: 'Bad request! There is a unique constrain error.',
+          ...exception.meta,
+        };
       } else if (exception.code === 'P2025') {
         status = 404;
-        //message = 'Not found!';
+        message = {
+          error: 'Not found!',
+          meta: exception.message,
+        };
       } else if (exception.code === 'P2011') {
         status = 400;
+        message = exception;
       }
     } else {
       message = exception.message.replace(/[\n]/g, '');
@@ -51,17 +56,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
           message = message.slice(1);
         } else break;
       }
-      console.log(exception.stack);
     }
-
-    console.log(typeof exception);
     response.status(status).json({
       statusCode: status,
-      //error: exception,
       message:
         exception instanceof PrismaClientKnownRequestError
-          ? exception.meta
-          : exception,
+          ? message
+          : exception.message,
     });
   }
 }

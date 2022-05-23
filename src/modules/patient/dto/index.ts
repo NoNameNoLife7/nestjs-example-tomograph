@@ -27,4 +27,4 @@ export {
   UpdatePathNodeDto,
   PathNodeIncludeDTO,
   PathNodePaginationDto,
-} from './path.node.dto';
+} from './path-node.dto';
