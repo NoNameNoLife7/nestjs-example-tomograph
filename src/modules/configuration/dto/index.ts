@@ -9,3 +9,8 @@ export {
   UpdateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
 } from './equipment-configuration.dto';
+export {
+  CreatePathNodeDto,
+  UpdatePathNodeDto,
+  PathNodePaginationDto,
+} from './path-node.dto';
