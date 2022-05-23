@@ -26,12 +26,12 @@ export class SoftwareConfigurationController {
   async lastSoftwareConfiguration() {
     const model: SoftwareConfigurationModel[] =
       await this.modelService.getLastSoftwareConfiguration();
-    if (!model[0]) {
+    if (!model[0])
       model[0] = await this.create({
         brightness: 100,
         language: 'ES',
       });
-    }
+
     return model;
   }
 

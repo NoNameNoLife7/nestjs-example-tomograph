@@ -29,14 +29,14 @@ export class EquipmentConfigurationController {
   async lastEquipmentConfiguration() {
     const model: equipmentConfiguration[] =
       await this.modelService.lastConfiguration();
-    if (!model[0]) {
+    if (!model[0])
       model[0] = await this.create({
         adjacent: false,
         direction: 'IZQ_DER',
         injectionFrequency: null,
         jump: null,
       });
-    }
+
     return model;
   }
 
