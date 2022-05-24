@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import {
   CreatePathNodeDto,
   PathNodePaginationDto,
@@ -41,18 +41,18 @@ export class PathNodeService {
     return { count, data };
   }
 
-  create(createPathNodeDto: CreatePathNodeDto): Promise<pathNode> {
-    const { tests, parentId, ...nonForeignRelationFields } = createPathNodeDto;
-    return this.pathNode.create({
+  async create(createPathNodeDto: CreatePathNodeDto): Promise<pathNode> {
+    const { tests, ...nonForeignRelationFields } = createPathNodeDto;
+    const model = await this.pathNode.create({
       data: {
         ...nonForeignRelationFields,
-        parent: { connect: { id: parentId } },
       },
     });
+    return model;
   }
 
   update(id: number, updatePathNodeDto: UpdatePathNodeDto): Promise<pathNode> {
-    const { tests, parentId, ...nonForeignRelationFields } = updatePathNodeDto;
+    const { tests, ...nonForeignRelationFields } = updatePathNodeDto;
     return this.pathNode.update({
       where: { id },
       data: { ...nonForeignRelationFields },

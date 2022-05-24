@@ -63,9 +63,6 @@ export class TestService {
   }
 
   async update(id: number, updateTestDto: UpdateTestDto): Promise<test> {
-    const test = await this.getById(id);
-    if (!test) throw new NotFoundException();
-
     const {
       softwareConfiguration,
       equipmentConfiguration,

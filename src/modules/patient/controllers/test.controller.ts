@@ -50,6 +50,7 @@ export class TestController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
     if (!+id) throw new BadRequestException('The id must be a number');
+    await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateTestDto);
   }
 

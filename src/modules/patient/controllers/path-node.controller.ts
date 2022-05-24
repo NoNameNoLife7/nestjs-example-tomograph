@@ -48,7 +48,7 @@ export class PathNodeController {
       createPathNodeDto,
     );
     if (!pathNodeModel) throw new BadRequestException('Invalid pathNode!');
-    return this.modelService.create(createPathNodeDto);
+    return pathNodeModel;
   }
 
   @Patch(':id')

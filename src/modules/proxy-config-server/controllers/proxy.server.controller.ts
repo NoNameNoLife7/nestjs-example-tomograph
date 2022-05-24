@@ -26,7 +26,7 @@ export class ProxyServerController {
       console.log(e.message);
     }
   }
-  //devices
+
   @Get('devices')
   listDevices(@Req() request: Request, @Body() data: any) {
     return this.proxy(request, data);

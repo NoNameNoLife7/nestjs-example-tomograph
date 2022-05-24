@@ -126,10 +126,10 @@ model equipmentConfiguration {
 model softwareConfiguration {
   id Int @id @default(autoincrement())
 
-  dateTime   DateTime? @default(now())
+  dateTime DateTime? @default(now())
 
   brightness Float
-  language Language @default(ES)
+  language   Language @default(ES)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
