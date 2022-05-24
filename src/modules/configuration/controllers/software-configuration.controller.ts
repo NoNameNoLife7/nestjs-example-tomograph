@@ -14,6 +14,7 @@ import { SoftwareConfigurationService } from '../services';
 import {
   CreateSoftwareConfigurationDto,
   SoftwareConfigurationPaginationDto,
+  SoftwareConfigurationRelation,
   UpdateSoftwareConfigurationDto,
 } from '../dto';
 import { softwareConfiguration as SoftwareConfigurationModel } from '@prisma/client';
@@ -35,18 +36,21 @@ export class SoftwareConfigurationController {
     return model;
   }
 
-  private async getInstanceOr404(id: number) {
+  private async getInstanceOr404(
+    id: number,
+    params?: SoftwareConfigurationRelation,
+  ) {
     const instance: SoftwareConfigurationModel | null =
-      await this.modelService.getById(id);
+      await this.modelService.getById(id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
+  get(@Param('id') id: string, @Query() params: SoftwareConfigurationRelation) {
     console.log(parseInt(id));
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Get()

@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRecordDto, RecordPaginationDto, UpdateRecordDto } from '../dto';
+import {
+  CreateRecordDto,
+  RecordPaginationDto,
+  RecordRelation,
+  UpdateRecordDto,
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { record } from '@prisma/client';
 import { WithPagination } from 'src/common/utils';
@@ -12,9 +17,10 @@ export class RecordService {
     return this.prisma.record;
   }
 
-  getById(id: number): Promise<record | null> {
+  getById(id: number, params?: RecordRelation): Promise<record | null> {
     return this.record.findUnique({
       where: { id },
+      ...params,
     });
   }
 

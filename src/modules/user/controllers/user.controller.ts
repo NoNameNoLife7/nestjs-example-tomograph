@@ -11,16 +11,21 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserService } from '../services';
-import { CreateUserDto, UpdateUserDto, UserPaginationDto } from '../dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserPaginationDto,
+  UserRelation,
+} from '../dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly modelService: UserService) {}
 
   @Get(':id')
-  async get(@Param('id') id: string) {
+  async get(@Param('id') id: string, @Query() params: UserRelation) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    const instance = await this.modelService.getById(+id);
+    const instance = await this.modelService.getById(+id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }

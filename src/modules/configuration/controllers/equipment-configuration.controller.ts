@@ -20,6 +20,7 @@ import {
   arraySamp,
   CreateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
+  EquipmentConfigurationRelation,
   UpdateEquipmentConfigurationDto,
 } from '../dto';
 
@@ -49,9 +50,11 @@ export class EquipmentConfigurationController {
     return arraySamp;
   }
 
-  private async getInstanceOr404(id: number) {
-    const instance: EquipmentConfigurationModel | null =
-      await this.modelService.getById(id);
+  private async getInstanceOr404(
+    id: number,
+    params?: EquipmentConfigurationRelation,
+  ) {
+    const instance = await this.modelService.getById(id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
@@ -62,9 +65,12 @@ export class EquipmentConfigurationController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
+  get(
+    @Param('id') id: string,
+    @Query() params: EquipmentConfigurationRelation,
+  ) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Post()

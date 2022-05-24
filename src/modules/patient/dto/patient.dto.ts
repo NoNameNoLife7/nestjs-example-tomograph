@@ -75,3 +75,10 @@ export class PatientPaginationDto extends PaginationDto {
 
   where?: any;
 }
+
+export class PatientRelation {
+  @IsOptional()
+  @Transform(({ value }) => new PatientIncludeDTO(value))
+  @Type(() => PatientIncludeDTO)
+  include: PatientIncludeDTO;
+}

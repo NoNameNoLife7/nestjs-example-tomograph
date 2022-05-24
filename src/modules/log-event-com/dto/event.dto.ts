@@ -30,10 +30,10 @@ export class CreateEventDto {
 export class UpdateEventDto extends CreateEventDto {}
 
 class EventIncludeDTO extends BaseIncludeDTO {
-  test?: boolean;
+  logs?: boolean;
 
   constructor(includeQueryParam: string) {
-    super(includeQueryParam, ['test']);
+    super(includeQueryParam, ['logs']);
   }
 }
 
@@ -44,4 +44,11 @@ export class EventPaginationDto extends PaginationDto {
   include: EventIncludeDTO;
 
   where?: any;
+}
+
+export class EventRelation {
+  @IsOptional()
+  @Transform(({ value }) => new EventIncludeDTO(value))
+  @Type(() => EventIncludeDTO)
+  include: EventIncludeDTO;
 }

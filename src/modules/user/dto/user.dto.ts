@@ -42,6 +42,13 @@ export class UserIncludeDTO extends BaseIncludeDTO {
   }
 }
 
+export class UserRelation {
+  @IsOptional()
+  @Transform(({ value }) => new UserIncludeDTO(value))
+  @Type(() => UserIncludeDTO)
+  include: UserIncludeDTO;
+}
+
 export class UserPaginationDto extends PaginationDto {
   @IsOptional()
   @Transform(({ value }) => new UserIncludeDTO(value))

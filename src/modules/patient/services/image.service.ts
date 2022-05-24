@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateImageDto, ImagePaginationDto, UpdateImageDto } from '../dto';
+import {
+  CreateImageDto,
+  ImagePaginationDto,
+  ImageRelation,
+  UpdateImageDto,
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { image } from '@prisma/client';
 import { WithPagination } from 'src/common/utils';
@@ -12,9 +17,10 @@ export class ImageService {
     return this.prisma.image;
   }
 
-  getById(id: number): Promise<image | null> {
+  getById(id: number, params?: ImageRelation): Promise<image | null> {
     return this.image.findUnique({
       where: { id },
+      ...params,
     });
   }
 

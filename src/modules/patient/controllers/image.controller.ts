@@ -11,23 +11,28 @@ import {
   Query,
 } from '@nestjs/common';
 import { ImageService } from '../services';
-import { CreateImageDto, ImagePaginationDto, UpdateImageDto } from '../dto';
+import {
+  CreateImageDto,
+  ImagePaginationDto,
+  ImageRelation,
+  UpdateImageDto,
+} from '../dto';
 import { image as ImageModel } from '@prisma/client';
 
 @Controller('image')
 export class ImageController {
   constructor(private readonly modelService: ImageService) {}
 
-  private async getInstanceOr404(id: number) {
-    const instance = await this.modelService.getById(id);
+  private async getInstanceOr404(id: number, params?: ImageRelation) {
+    const instance = await this.modelService.getById(id, params ?? params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
+  get(@Param('id') id: string, @Query() params: ImageRelation) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Get()

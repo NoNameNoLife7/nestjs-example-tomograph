@@ -29,11 +29,16 @@ export class WebsocketServer
     this.logger.log(`Client connected ${client.id}!`);
   }
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected ${client.id}!`);
+    this.logger.log(`Client disconnected!`);
   }
 
   @SubscribeMessage('connections')
   handleMessage(client: Socket, text: string): WsResponse<String> {
+    return { event: 'msgtToClient', data: 'Hello' };
+  }
+
+  @SubscribeMessage('closeConnection')
+  closeConnections(client: Socket, text: string): WsResponse<String> {
     return { event: 'msgtToClient', data: 'Hello' };
   }
 }

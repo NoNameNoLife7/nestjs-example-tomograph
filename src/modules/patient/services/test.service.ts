@@ -1,5 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTestDto, TestPaginationDto, UpdateTestDto } from '../dto';
+import {
+  CreateTestDto,
+  TestPaginationDto,
+  TestRelation,
+  UpdateTestDto,
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { test } from '@prisma/client';
 import { WithPagination } from 'src/common/utils';
@@ -12,8 +17,8 @@ export class TestService {
     return this.prisma.test;
   }
 
-  getById(id: number): Promise<test | null> {
-    return this.test.findUnique({ where: { id } });
+  getById(id: number, params?: TestRelation): Promise<test | null> {
+    return this.test.findUnique({ where: { id }, ...params });
   }
 
   async list(params: TestPaginationDto): Promise<WithPagination<test>> {

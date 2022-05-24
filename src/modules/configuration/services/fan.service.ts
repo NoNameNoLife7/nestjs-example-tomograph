@@ -3,6 +3,7 @@ import { CreateFanDto, FanPaginationDto, UpdateFanDto } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { fan } from '@prisma/client';
 import { WithPagination } from 'src/common/utils';
+import { FanRelation } from '../dto/fan.dto';
 
 @Injectable()
 export class FanService {
@@ -12,9 +13,10 @@ export class FanService {
     return this.prisma.fan;
   }
 
-  getById(id: number): Promise<fan | null> {
+  getById(id: number, params?: FanRelation): Promise<fan | null> {
     return this.fan.findUnique({
       where: { id },
+      ...params,
     });
   }
 

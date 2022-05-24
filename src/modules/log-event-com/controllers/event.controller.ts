@@ -8,10 +8,17 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { EventService } from '../services';
-import { CreateEventDto, UpdateEventDto } from '../dto';
+import {
+  CreateEventDto,
+  EventPaginationDto,
+  EventRelation,
+  UpdateEventDto,
+} from '../dto';
 import { event as EventModel } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 type CreateData = CreateEventDto;
 type UpdateData = UpdateEventDto;
@@ -20,21 +27,29 @@ type UpdateData = UpdateEventDto;
 export class EventController {
   constructor(private readonly modelService: EventService) {}
 
-  private async getInstanceOr404(id: number): Promise<EventModel> {
-    const instance = await this.modelService.getById(id);
+  private async getInstanceOr404(
+    id: number,
+    params?: EventRelation,
+  ): Promise<EventModel> {
+    const instance = await this.modelService.getById(id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string): Promise<EventModel | null> {
+  get(
+    @Param('id') id: string,
+    @Query() params: EventPaginationDto,
+  ): Promise<EventModel | null> {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Get()
-  list(): Promise<EventModel[]> {
-    return this.modelService.list();
+  list(
+    @Query() params: EventPaginationDto,
+  ): Promise<WithPagination<EventModel>> {
+    return this.modelService.list(params);
   }
 
   @Post()

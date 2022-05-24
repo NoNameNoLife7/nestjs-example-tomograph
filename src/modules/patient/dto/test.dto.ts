@@ -84,3 +84,10 @@ export class TestPaginationDto extends PaginationDto {
   @Type(() => TestIncludeDTO)
   include: TestIncludeDTO;
 }
+
+export class TestRelation {
+  @IsOptional()
+  @Transform(({ value }) => new TestIncludeDTO(value))
+  @Type(() => TestIncludeDTO)
+  include: TestIncludeDTO;
+}

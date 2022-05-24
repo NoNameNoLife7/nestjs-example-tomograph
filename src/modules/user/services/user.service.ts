@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto, UserPaginationDto } from '../dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserPaginationDto,
+  UserRelation,
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { user } from '@prisma/client';
 import { WithPagination } from 'src/common/utils';
@@ -12,9 +17,10 @@ export class UserService {
     return this.prisma.user;
   }
 
-  getById(id: number): Promise<user | null> {
+  getById(id: number, params?: UserRelation): Promise<user | null> {
     return this.user.findUnique({
       where: { id },
+      ...params,
     });
   }
 

@@ -11,15 +11,20 @@ import {
   Query,
 } from '@nestjs/common';
 import { TestService } from '../services';
-import { CreateTestDto, TestPaginationDto, UpdateTestDto } from '../dto';
+import {
+  CreateTestDto,
+  TestPaginationDto,
+  TestRelation,
+  UpdateTestDto,
+} from '../dto';
 import { PatientPosition } from '@prisma/client';
 
 @Controller('test')
 export class TestController {
   constructor(private readonly modelService: TestService) {}
 
-  private async getInstanceOr404(id: number) {
-    const instance = await this.modelService.getById(id);
+  private async getInstanceOr404(id: number, params?: TestRelation) {
+    const instance = await this.modelService.getById(id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
@@ -35,9 +40,9 @@ export class TestController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
+  get(@Param('id') id: string, @Query() params: TestRelation) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Post()

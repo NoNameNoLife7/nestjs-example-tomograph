@@ -47,3 +47,10 @@ export class PathNodePaginationDto extends PaginationDto {
 
   where?: any;
 }
+
+export class PathNodeRelation {
+  @IsOptional()
+  @Transform(({ value }) => new PathNodeIncludeDTO(value))
+  @Type(() => PathNodeIncludeDTO)
+  include: PathNodeIncludeDTO;
+}

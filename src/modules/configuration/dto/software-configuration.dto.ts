@@ -42,3 +42,10 @@ export class SoftwareConfigurationPaginationDto extends PaginationDto {
 
   where?: any;
 }
+
+export class SoftwareConfigurationRelation {
+  @IsOptional()
+  @Transform(({ value }) => new SoftwareConfigurationIncludeDTO(value))
+  @Type(() => SoftwareConfigurationIncludeDTO)
+  include: SoftwareConfigurationIncludeDTO;
+}

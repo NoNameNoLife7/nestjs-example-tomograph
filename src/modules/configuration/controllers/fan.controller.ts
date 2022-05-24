@@ -13,21 +13,25 @@ import {
 import { FanService } from '../services';
 import { CreateFanDto, FanPaginationDto, UpdateFanDto } from '../dto';
 import { fan as FanModel } from '@prisma/client';
+import { FanRelation } from '../dto/fan.dto';
 
 @Controller('fan')
 export class FanController {
   constructor(private readonly modelService: FanService) {}
 
-  private async getInstanceOr404(id: number) {
-    const instance: FanModel | null = await this.modelService.getById(id);
+  private async getInstanceOr404(id: number, params?: FanRelation) {
+    const instance: FanModel | null = await this.modelService.getById(
+      id,
+      params,
+    );
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
+  get(@Param('id') id: string, @Query() params: FanRelation) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Get()

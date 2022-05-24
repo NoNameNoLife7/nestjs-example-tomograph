@@ -8,10 +8,17 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { LogService } from '../services';
-import { CreateLogDto, UpdateLogDto } from '../dto';
+import {
+  CreateLogDto,
+  LogPaginationDto,
+  LogRelation,
+  UpdateLogDto,
+} from '../dto';
 import { log as LogModel } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 type CreateData = CreateLogDto;
 type UpdateData = UpdateLogDto;
@@ -20,21 +27,27 @@ type UpdateData = UpdateLogDto;
 export class LogController {
   constructor(private readonly modelService: LogService) {}
 
-  private async getInstanceOr404(id: number): Promise<LogModel> {
-    const instance = await this.modelService.getById(id);
+  private async getInstanceOr404(
+    id: number,
+    params?: LogRelation,
+  ): Promise<LogModel> {
+    const instance = await this.modelService.getById(id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string): Promise<LogModel | null> {
+  get(
+    @Param('id') id: string,
+    @Query() params: LogRelation,
+  ): Promise<LogModel | null> {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Get()
-  list(): Promise<LogModel[]> {
-    return this.modelService.list();
+  list(@Query() params: LogPaginationDto): Promise<WithPagination<LogModel>> {
+    return this.modelService.list(params);
   }
 
   @Post()

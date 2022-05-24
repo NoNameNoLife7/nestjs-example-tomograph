@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
+  EquipmentConfigurationRelation,
   UpdateEquipmentConfigurationDto,
 } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -16,9 +17,13 @@ export class EquipmentConfigurationService {
     return this.prisma.equipmentConfiguration;
   }
 
-  getById(id: number): Promise<equipmentConfiguration | null> {
+  getById(
+    id: number,
+    params?: EquipmentConfigurationRelation,
+  ): Promise<equipmentConfiguration | null> {
     return this.equipmentConfiguration.findUnique({
       where: { id },
+      ...params,
     });
   }
 

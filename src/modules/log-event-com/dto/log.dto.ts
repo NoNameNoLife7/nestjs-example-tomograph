@@ -48,3 +48,10 @@ export class LogPaginationDto extends PaginationDto {
 
   where?: any;
 }
+
+export class LogRelation {
+  @IsOptional()
+  @Transform(({ value }) => new LogIncludeDTO(value))
+  @Type(() => LogIncludeDTO)
+  include: LogIncludeDTO;
+}

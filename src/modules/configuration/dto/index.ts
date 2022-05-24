@@ -3,11 +3,13 @@ export {
   CreateSoftwareConfigurationDto,
   UpdateSoftwareConfigurationDto,
   SoftwareConfigurationPaginationDto,
+  SoftwareConfigurationRelation
 } from './software-configuration.dto';
 export {
   CreateEquipmentConfigurationDto,
   UpdateEquipmentConfigurationDto,
   EquipmentConfigurationPaginationDto,
+  EquipmentConfigurationRelation
   arrayFreq,
   arraySamp,
 } from './equipment-configuration.dto';
@@ -15,4 +17,5 @@ export {
   CreatePathNodeDto,
   UpdatePathNodeDto,
   PathNodePaginationDto,
+  PathNodeRelation
 } from './path-node.dto';

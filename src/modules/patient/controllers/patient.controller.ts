@@ -14,6 +14,7 @@ import { PatientService } from '../services';
 import {
   CreatePatientDto,
   PatientPaginationDto,
+  PatientRelation,
   UpdatePatientDto,
 } from '../dto';
 import { patient as PatientModel } from '@prisma/client';
@@ -22,16 +23,16 @@ import { patient as PatientModel } from '@prisma/client';
 export class PatientController {
   constructor(private readonly modelService: PatientService) {}
 
-  private async getInstanceOr404(id: number) {
-    const instance = await this.modelService.getById(id);
+  private async getInstanceOr404(id: number, params: PatientRelation) {
+    const instance = await this.modelService.getById(id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
+  get(@Param('id') id: string, @Query() params: PatientRelation) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    return this.getInstanceOr404(+id);
+    return this.getInstanceOr404(+id, params);
   }
 
   @Get()

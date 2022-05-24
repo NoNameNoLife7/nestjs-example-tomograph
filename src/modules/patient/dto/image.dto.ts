@@ -44,3 +44,10 @@ export class ImagePaginationDto extends PaginationDto {
 
   where?: any;
 }
+
+export class ImageRelation {
+  @IsOptional()
+  @Transform(({ value }) => new ImageIncludeDTO(value))
+  @Type(() => ImageIncludeDTO)
+  include: ImageIncludeDTO;
+}

@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleDto, RolePaginationDto, UpdateRoleDto } from '../dto';
+import {
+  CreateRoleDto,
+  RolePaginationDto,
+  RoleRelation,
+  UpdateRoleDto,
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { role } from '@prisma/client';
 import { WithPagination } from 'src/common/utils';
@@ -12,9 +17,10 @@ export class RoleService {
     return this.prisma.role;
   }
 
-  getById(id: number): Promise<role | null> {
+  getById(id: number, params?: RoleRelation): Promise<role | null> {
     return this.role.findUnique({
       where: { id },
+      ...params,
     });
   }
 

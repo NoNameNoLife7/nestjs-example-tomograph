@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEventDto, UpdateEventDto } from '../dto';
+import {
+  CreateEventDto,
+  EventPaginationDto,
+  EventRelation,
+  UpdateEventDto,
+} from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { event } from '@prisma/client';
+import { WithPagination } from 'src/common/utils';
 
 type Model = event;
 type CreateData = CreateEventDto;
@@ -15,14 +21,24 @@ export class EventService {
     return this.prisma.event;
   }
 
-  getById(id: number): Promise<Model | null> {
+  getById(id: number, params?: EventRelation): Promise<Model | null> {
     return this.model.findUnique({
       where: { id },
+      ...params,
     });
   }
 
-  list(): Promise<Model[]> {
-    return this.model.findMany();
+  async list(params: EventPaginationDto): Promise<WithPagination<Model>> {
+    const { orderBy, where, ...otherParams } = params;
+
+    const data = await this.model.findMany({
+      ...otherParams,
+      where,
+      orderBy: { updatedAt: orderBy },
+    });
+    const count: number = await this.model.count(where);
+
+    return { count, data };
   }
 
   create(createEventDto: CreateData): Promise<Model> {

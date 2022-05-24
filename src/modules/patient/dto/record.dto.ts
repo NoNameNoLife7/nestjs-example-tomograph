@@ -17,7 +17,12 @@ export class RecordIncludeDTO extends BaseIncludeDTO {
     super(includeQueryParam, ['test']);
   }
 }
-
+export class RecordRelation {
+  @IsOptional()
+  @Transform(({ value }) => new RecordIncludeDTO(value))
+  @Type(() => RecordIncludeDTO)
+  include: RecordIncludeDTO;
+}
 export class RecordPaginationDto extends PaginationDto {
   @IsOptional()
   @Transform(({ value }) => new RecordIncludeDTO(value))

@@ -26,3 +26,10 @@ export class RolePaginationDto extends PaginationDto {
 
   where?: any;
 }
+
+export class RoleRelation {
+  @IsOptional()
+  @Transform(({ value }) => new RoleIncludeDTO(value))
+  @Type(() => RoleIncludeDTO)
+  include: RoleIncludeDTO;
+}

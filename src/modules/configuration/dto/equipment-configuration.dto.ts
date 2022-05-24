@@ -1,6 +1,7 @@
 import {
   IsBoolean,
   IsEnum,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -20,7 +21,7 @@ export class CreateEquipmentConfigurationDto {
 
   @IsOptional()
   @IsInt()
-  @IsEnum(arrayFreq)
+  @IsIn(arrayFreq)
   injectionFrequency?: number;
 
   @IsEnum(Direction)
@@ -33,7 +34,7 @@ export class CreateEquipmentConfigurationDto {
 
   @IsOptional()
   @IsInt()
-  @IsEnum(arraySamp)
+  @IsIn(arraySamp)
   samplingRate?: number;
 }
 
@@ -54,4 +55,11 @@ export class EquipmentConfigurationPaginationDto extends PaginationDto {
   include: EquipmentConfigurationIncludeDTO;
 
   where?: any;
+}
+
+export class EquipmentConfigurationRelation {
+  @IsOptional()
+  @Transform(({ value }) => new EquipmentConfigurationIncludeDTO(value))
+  @Type(() => EquipmentConfigurationIncludeDTO)
+  include: EquipmentConfigurationIncludeDTO;
 }

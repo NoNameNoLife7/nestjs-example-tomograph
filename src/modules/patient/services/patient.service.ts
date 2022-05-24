@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CreatePatientDto,
   PatientPaginationDto,
+  PatientRelation,
   UpdatePatientDto,
 } from '../dto';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -16,9 +17,10 @@ export class PatientService {
     return this.prisma.patient;
   }
 
-  getById(id: number): Promise<patient | null> {
+  getById(id: number, params: PatientRelation): Promise<patient | null> {
     return this.patient.findUnique({
       where: { id },
+      ...params,
     });
   }
 

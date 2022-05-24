@@ -12,7 +12,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { RoleService } from '../services';
-import { CreateRoleDto, RolePaginationDto, UpdateRoleDto } from '../dto';
+import {
+  CreateRoleDto,
+  RolePaginationDto,
+  RoleRelation,
+  UpdateRoleDto,
+} from '../dto';
 import { role as RoleModel } from '@prisma/client';
 
 @Controller('role')
@@ -20,9 +25,9 @@ export class RoleController {
   constructor(private readonly modelService: RoleService) {}
 
   @Get(':id')
-  async getById(@Param('id') id: string) {
+  async getById(@Param('id') id: string, @Query() params: RoleRelation) {
     if (!+id) throw new BadRequestException('The id must be a number');
-    const instance = await this.modelService.getById(+id);
+    const instance = await this.modelService.getById(+id, params);
     if (!instance) throw new NotFoundException();
     return instance;
   }
