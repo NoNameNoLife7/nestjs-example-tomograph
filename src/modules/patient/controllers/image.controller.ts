@@ -46,7 +46,7 @@ export class ImageController {
       createImageDto,
     );
     if (!imageModel) throw new BadRequestException('Invalid image!');
-    return this.modelService.create(createImageDto);
+    return imageModel;
   }
 
   @Patch(':id')

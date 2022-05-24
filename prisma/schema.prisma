@@ -59,7 +59,7 @@ model patient {
 model fan {
   id Int @id @default(autoincrement())
 
-  name     String  @db.VarChar(256)
+  name     String  @unique() @db.VarChar(256)
   model    String? @db.VarChar(256)
   protocol String? @db.VarChar(256)
 

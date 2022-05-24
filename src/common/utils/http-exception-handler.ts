@@ -16,16 +16,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let status = 500;
 
     let message: string | object = exception.message;
+    let error: string = exception.name;
 
     if (exception instanceof PrismaClientKnownRequestError) {
       if (exception.code === 'P2002') {
         status = 400;
+        error = 'Bad request exception!';
         message = {
-          error: 'Bad request! There is a unique constrain error.',
+          error: 'There is a unique constrain error.',
           ...exception.meta,
         };
       } else if (exception.code === 'P2025') {
         status = 404;
+        error = 'Not found exception!';
         message = {
           error: 'Not found!',
           meta: exception.message,
@@ -33,6 +36,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       } else if (exception.code === 'P2011') {
         status = 400;
         message = exception;
+        error = 'Bad request exception';
       }
     } else {
       message = exception.message.replace(/[\n]/g, '');
@@ -49,6 +53,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exception instanceof PrismaClientKnownRequestError
           ? message
           : exception.message,
+      error: error,
     });
   }
 }

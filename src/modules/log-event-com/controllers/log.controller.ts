@@ -56,7 +56,7 @@ export class LogController {
     if (!logModel) {
       throw new BadRequestException('Invalid log!');
     }
-    return this.modelService.create(createLogDto);
+    return logModel;
   }
 
   @Patch(':id')

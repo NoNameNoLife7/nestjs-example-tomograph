@@ -58,7 +58,7 @@ export class EventController {
       createEventDto,
     );
     if (!eventModel) throw new BadRequestException('Invalid event!');
-    return this.modelService.create(createEventDto);
+    return eventModel;
   }
 
   @Patch(':id')

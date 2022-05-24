@@ -41,9 +41,9 @@ export class FanController {
 
   @Post()
   async create(@Body() createFanDto: CreateFanDto) {
-    const fanModel: FanModel = await this.modelService.create(createFanDto);
+    const fanModel = await this.modelService.create(createFanDto);
     if (!fanModel) throw new BadRequestException('Invalid fan!');
-    return this.modelService.create(createFanDto);
+    return fanModel;
   }
 
   @Patch(':id')

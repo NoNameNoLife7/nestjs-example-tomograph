@@ -46,7 +46,7 @@ export class RecordController {
       createRecordDto,
     );
     if (!recordModel) throw new BadRequestException('Invalid record!');
-    return this.modelService.create(createRecordDto);
+    return recordModel;
   }
 
   @Patch(':id')

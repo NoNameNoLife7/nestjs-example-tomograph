@@ -46,7 +46,7 @@ export class PatientController {
       createPatientDto,
     );
     if (!patientModel) throw new BadRequestException('Invalid patient!');
-    return this.modelService.create(createPatientDto);
+    return patientModel;
   }
 
   @Patch(':id')
