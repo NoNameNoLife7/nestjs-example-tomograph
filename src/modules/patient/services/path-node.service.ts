@@ -25,11 +25,11 @@ export class PathNodeService {
   }
 
   async list(params: PathNodePaginationDto): Promise<WithPagination<pathNode>> {
-    const { orderBy, where, include, ...otherParams } = params;
+    const { orderBy, where, include, parentId, id, ...otherParams } = params;
 
     const data: pathNode[] = await this.pathNode.findMany({
       ...otherParams,
-      where,
+      where: { id: id, parentId: parentId },
       include,
     });
     const count: number = await this.pathNode.count(where);

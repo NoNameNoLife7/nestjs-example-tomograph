@@ -45,7 +45,8 @@ export class PathNodePaginationDto extends PaginationDto {
   @Type(() => PathNodeIncludeDTO)
   include: PathNodeIncludeDTO;
 
-  where?: any;
+  parentId: any;
+  id: any;
 }
 
 export class PathNodeRelation {

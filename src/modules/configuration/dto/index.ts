@@ -13,9 +13,3 @@ export {
   arrayFreq,
   arraySamp,
 } from './equipment-configuration.dto';
-export {
-  CreatePathNodeDto,
-  UpdatePathNodeDto,
-  PathNodePaginationDto,
-  PathNodeRelation,
-} from './path-node.dto';

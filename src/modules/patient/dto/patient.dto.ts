@@ -21,20 +21,22 @@ export class CreatePatientDto {
   @IsNotEmpty()
   lastName: string;
 
+  @IsOptional()
+  @Type(() => Date)
   @IsDate()
-  date: Date;
+  date?: Date;
 
   @IsOptional()
   @IsString()
-  hospitalCode: string;
+  hospitalCode?: string;
 
   @IsOptional()
   @IsString()
-  comorbidities: string;
+  comorbidities?: string;
 
   @IsOptional()
   @IsString()
-  diagnostic: string;
+  diagnostic?: string;
 
   @IsOptional()
   @IsBoolean()
@@ -42,11 +44,11 @@ export class CreatePatientDto {
 
   @IsOptional()
   @IsNumber()
-  weight: number;
+  weight?: number;
 
   @IsOptional()
   @IsNumber()
-  size: number;
+  size?: number;
 
   @IsOptional()
   @IsEnum(Sex)

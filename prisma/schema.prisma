@@ -37,13 +37,13 @@ model user {
 model patient {
   id Int @id @default(autoincrement())
 
-  firstName     String   @db.VarChar(128)
-  lastName      String   @db.VarChar(255)
-  date          DateTime
-  hospitalCode  String?  @db.VarChar(128)
-  comorbidities String?  @db.VarChar(256)
-  diagnostic    String?  @db.VarChar(128)
-  active        Boolean? @default(true)
+  firstName     String    @db.VarChar(128)
+  lastName      String    @db.VarChar(255)
+  date          DateTime? @default(now())
+  hospitalCode  String?   @db.VarChar(128)
+  comorbidities String?   @db.VarChar(256)
+  diagnostic    String?   @db.VarChar(128)
+  active        Boolean?  @default(true)
   weight        Float?
   size          Float?
 
