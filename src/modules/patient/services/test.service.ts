@@ -45,6 +45,7 @@ export class TestService {
       equipmentConfiguration,
       softwareConfigurationId,
       equipmentConfigurationId,
+      patientId,
       ...nonForeignRelationFields
     } = createTestDto;
 
@@ -64,6 +65,9 @@ export class TestService {
         equipmentConfiguration: {
           ...equip,
         },
+        patient: {
+          connect: { id: patientId },
+        },
       },
     });
   }
@@ -74,6 +78,7 @@ export class TestService {
       equipmentConfiguration,
       softwareConfigurationId,
       equipmentConfigurationId,
+      patientId,
       ...nonForeignRelationFields
     } = updateTestDto;
 
@@ -91,6 +96,7 @@ export class TestService {
             ? equipmentConfiguration
             : equipmentConfigurationId,
         },
+        patient: { connect: { id: patientId } },
       },
     });
   }

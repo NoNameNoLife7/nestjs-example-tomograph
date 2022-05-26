@@ -26,7 +26,7 @@ export class SoftwareConfigurationController {
   @Get('lastSoftwareConfiguration')
   async lastSoftwareConfiguration(): Promise<SoftwareConfigurationModel> {
     let model = (await this.modelService.getLastSoftwareConfiguration())[0];
-    if (!model[0])
+    if (!model)
       model = await this.modelService.create({
         language: 'ES',
         brightness: 100,

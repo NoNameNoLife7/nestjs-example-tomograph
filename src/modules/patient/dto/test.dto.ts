@@ -39,6 +39,10 @@ export class CreateTestDto {
 
   @IsOptional()
   @IsInt()
+  patientId: number;
+
+  @IsOptional()
+  @IsInt()
   softwareConfigurationId: number;
 
   @ValidateIf((obj: CreateTestDto) => !obj.softwareConfigurationId)
