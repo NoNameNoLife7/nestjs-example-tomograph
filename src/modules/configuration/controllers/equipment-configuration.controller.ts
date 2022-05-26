@@ -11,10 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { EquipmentConfigurationService } from '../services';
-import {
-  equipmentConfiguration as EquipmentConfigurationModel,
-  equipmentConfiguration,
-} from '@prisma/client';
+import { equipmentConfiguration as EquipmentConfigurationModel } from '@prisma/client';
 import {
   arrayFreq,
   arraySamp,
@@ -29,11 +26,10 @@ export class EquipmentConfigurationController {
   constructor(private readonly modelService: EquipmentConfigurationService) {}
 
   @Get('lastConfiguration')
-  async lastEquipmentConfiguration() {
-    const model: equipmentConfiguration[] =
-      await this.modelService.lastConfiguration();
-    if (!model[0])
-      model[0] = await this.create({
+  async lastEquipmentConfiguration(): Promise<EquipmentConfigurationModel> {
+    let model = (await this.modelService.lastConfiguration())[0];
+    if (!model)
+      model = await this.create({
         adjacent: false,
         direction: 'IZQ_DER',
       });
@@ -41,7 +37,7 @@ export class EquipmentConfigurationController {
   }
 
   @Get('injectionFrequency')
-  getInyectionFequency() {
+  getInjectionFrequency() {
     return arrayFreq;
   }
 
