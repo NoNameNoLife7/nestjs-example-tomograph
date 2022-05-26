@@ -55,7 +55,9 @@ export class TestService {
     const equip = equipmentConfigurationId
       ? { connect: { id: equipmentConfigurationId } }
       : { create: equipmentConfiguration };
-
+    const pat = patientId
+      ? { patient: { connect: { id: patientId } } }
+      : undefined;
     return this.test.create({
       data: {
         ...nonForeignRelationFields,
@@ -65,9 +67,7 @@ export class TestService {
         equipmentConfiguration: {
           ...equip,
         },
-        patient: {
-          connect: { id: patientId },
-        },
+        ...pat,
       },
     });
   }
@@ -81,6 +81,10 @@ export class TestService {
       patientId,
       ...nonForeignRelationFields
     } = updateTestDto;
+
+    const pat = patientId
+      ? { patient: { connect: { id: patientId } } }
+      : undefined;
 
     return this.test.update({
       where: { id },
@@ -96,7 +100,7 @@ export class TestService {
             ? equipmentConfiguration
             : equipmentConfigurationId,
         },
-        patient: { connect: { id: patientId } },
+        ...pat,
       },
     });
   }
