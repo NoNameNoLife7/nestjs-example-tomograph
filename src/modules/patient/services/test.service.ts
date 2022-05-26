@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateTestDto,
   TestPaginationDto,
@@ -48,20 +48,21 @@ export class TestService {
       ...nonForeignRelationFields
     } = createTestDto;
 
+    const soft = softwareConfigurationId
+      ? { connect: { id: softwareConfigurationId } }
+      : { create: softwareConfiguration };
+    const equip = equipmentConfigurationId
+      ? { connect: { id: equipmentConfigurationId } }
+      : { create: equipmentConfiguration };
+
     return this.test.create({
       data: {
         ...nonForeignRelationFields,
         softwareConfiguration: {
-          connectOrCreate: {
-            create: softwareConfiguration,
-            where: { id: softwareConfigurationId },
-          },
+          ...soft,
         },
         equipmentConfiguration: {
-          connectOrCreate: {
-            create: equipmentConfiguration,
-            where: { id: equipmentConfigurationId },
-          },
+          ...equip,
         },
       },
     });

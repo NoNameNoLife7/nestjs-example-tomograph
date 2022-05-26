@@ -24,15 +24,13 @@ export class SoftwareConfigurationController {
   constructor(private readonly modelService: SoftwareConfigurationService) {}
 
   @Get('lastSoftwareConfiguration')
-  async lastSoftwareConfiguration() {
-    const model: SoftwareConfigurationModel[] =
-      await this.modelService.getLastSoftwareConfiguration();
+  async lastSoftwareConfiguration(): Promise<SoftwareConfigurationModel> {
+    let model = (await this.modelService.getLastSoftwareConfiguration())[0];
     if (!model[0])
-      model[0] = await this.create({
-        brightness: 100,
+      model = await this.modelService.create({
         language: 'ES',
+        brightness: 100,
       });
-
     return model;
   }
 

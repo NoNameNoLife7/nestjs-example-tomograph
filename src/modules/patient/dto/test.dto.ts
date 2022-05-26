@@ -39,7 +39,7 @@ export class CreateTestDto {
 
   @IsOptional()
   @IsInt()
-  softwareConfigurationId?: number;
+  softwareConfigurationId: number;
 
   @ValidateIf((obj: CreateTestDto) => !obj.softwareConfigurationId)
   @IsObject()
@@ -49,7 +49,7 @@ export class CreateTestDto {
 
   @IsOptional()
   @IsInt()
-  equipmentConfigurationId?: number;
+  equipmentConfigurationId: number;
 
   @ValidateIf((obj: CreateTestDto) => !obj.equipmentConfigurationId)
   @IsObject()
