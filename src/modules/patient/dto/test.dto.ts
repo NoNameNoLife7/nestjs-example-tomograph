@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsEnum,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsObject,
@@ -18,9 +19,11 @@ import {
 } from 'src/modules/configuration/dto';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
+export const arrayInclination: number[] = [-20, 0, 20, 30, 45, 90, 120];
+
 export class CreateTestDto {
   @IsInt()
-  @IsNotEmpty()
+  @IsIn(arrayInclination)
   inclination: number;
 
   @IsOptional()
@@ -39,27 +42,13 @@ export class CreateTestDto {
 
   @IsOptional()
   @IsInt()
-  patientId: number;
+  patientId?: number;
 
-  @IsOptional()
   @IsInt()
   softwareConfigurationId: number;
 
-  @ValidateIf((obj: CreateTestDto) => !obj.softwareConfigurationId)
-  @IsObject()
-  @ValidateNested()
-  @Type(() => CreateSoftwareConfigurationDto)
-  softwareConfiguration: CreateSoftwareConfigurationDto;
-
-  @IsOptional()
   @IsInt()
   equipmentConfigurationId: number;
-
-  @ValidateIf((obj: CreateTestDto) => !obj.equipmentConfigurationId)
-  @IsObject()
-  @ValidateNested()
-  @Type(() => CreateEquipmentConfigurationDto)
-  equipmentConfiguration: CreateEquipmentConfigurationDto;
 }
 
 export class UpdateTestDto extends CreateTestDto {}
@@ -70,6 +59,8 @@ export class TestIncludeDTO extends BaseIncludeDTO {
   softwareConfiguration?: boolean;
   equipmentConfiguration?: boolean;
   fan?: boolean;
+  logs?: boolean;
+  records?: boolean;
 
   constructor(includeQueryParam: string) {
     super(includeQueryParam, [
@@ -78,6 +69,8 @@ export class TestIncludeDTO extends BaseIncludeDTO {
       'softwareConfiguration',
       'equipmentConfiguration',
       'fan',
+      'logs',
+      'records',
     ]);
   }
 }

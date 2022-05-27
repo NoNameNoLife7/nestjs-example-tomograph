@@ -40,68 +40,15 @@ export class TestService {
   }
 
   create(createTestDto: CreateTestDto): Promise<test> {
-    const {
-      softwareConfiguration,
-      equipmentConfiguration,
-      softwareConfigurationId,
-      equipmentConfigurationId,
-      patientId,
-      ...nonForeignRelationFields
-    } = createTestDto;
-
-    const soft = softwareConfigurationId
-      ? { connect: { id: softwareConfigurationId } }
-      : { create: softwareConfiguration };
-    const equip = equipmentConfigurationId
-      ? { connect: { id: equipmentConfigurationId } }
-      : { create: equipmentConfiguration };
-    const pat = patientId
-      ? { patient: { connect: { id: patientId } } }
-      : undefined;
     return this.test.create({
-      data: {
-        ...nonForeignRelationFields,
-        softwareConfiguration: {
-          ...soft,
-        },
-        equipmentConfiguration: {
-          ...equip,
-        },
-        ...pat,
-      },
+      data: createTestDto,
     });
   }
 
   async update(id: number, updateTestDto: UpdateTestDto): Promise<test> {
-    const {
-      softwareConfiguration,
-      equipmentConfiguration,
-      softwareConfigurationId,
-      equipmentConfigurationId,
-      patientId,
-      ...nonForeignRelationFields
-    } = updateTestDto;
-
-    const pat = patientId
-      ? { patient: { connect: { id: patientId } } }
-      : undefined;
-
     return this.test.update({
       where: { id },
-      data: {
-        ...nonForeignRelationFields,
-        softwareConfiguration: {
-          update: softwareConfiguration
-            ? softwareConfiguration
-            : softwareConfigurationId,
-        },
-        equipmentConfiguration: {
-          update: equipmentConfiguration
-            ? equipmentConfiguration
-            : equipmentConfigurationId,
-        },
-        ...pat,
-      },
+      data: updateTestDto,
     });
   }
 

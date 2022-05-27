@@ -41,10 +41,10 @@ export class CreateEquipmentConfigurationDto {
 export class UpdateEquipmentConfigurationDto extends CreateEquipmentConfigurationDto {}
 
 export class EquipmentConfigurationIncludeDTO extends BaseIncludeDTO {
-  test?: boolean;
+  tests?: boolean;
 
   constructor(includeQueryParam: string) {
-    super(includeQueryParam, ['test']);
+    super(includeQueryParam, ['tests']);
   }
 }
 

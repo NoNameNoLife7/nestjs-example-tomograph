@@ -27,10 +27,10 @@ export class CreateSoftwareConfigurationDto {
 export class UpdateSoftwareConfigurationDto extends CreateSoftwareConfigurationDto {}
 
 export class SoftwareConfigurationIncludeDTO extends BaseIncludeDTO {
-  test?: boolean;
+  tests?: boolean;
 
   constructor(includeQueryParam: string) {
-    super(includeQueryParam, ['test']);
+    super(includeQueryParam, ['tests']);
   }
 }
 

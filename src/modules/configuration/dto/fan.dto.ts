@@ -21,10 +21,10 @@ export class CreateFanDto {
 export class UpdateFanDto extends CreateFanDto {}
 
 export class FanIncludeDTO extends BaseIncludeDTO {
-  test?: boolean;
+  tests?: boolean;
 
   constructor(includeQueryParam: string) {
-    super(includeQueryParam, ['test']);
+    super(includeQueryParam, ['tests']);
   }
 }
 

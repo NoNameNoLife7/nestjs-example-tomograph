@@ -66,7 +66,7 @@ model fan {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
-  test test?
+  tests test[]
 }
 
 model log {
@@ -120,7 +120,7 @@ model equipmentConfiguration {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
-  test test?
+  tests test[]
 }
 
 model softwareConfiguration {
@@ -134,7 +134,7 @@ model softwareConfiguration {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
-  test test?
+  tests test[]
 }
 
 model communication {
@@ -182,13 +182,13 @@ model test {
   patientId Int?
 
   fan   fan? @relation(fields: [fanId], references: [id])
-  fanId Int? @unique
+  fanId Int?
 
   softwareConfiguration   softwareConfiguration @relation(fields: [softwareConfigurationId], references: [id])
-  softwareConfigurationId Int                   @unique
+  softwareConfigurationId Int
 
   equipmentConfiguration   equipmentConfiguration @relation(fields: [equipmentConfigurationId], references: [id])
-  equipmentConfigurationId Int                    @unique
+  equipmentConfigurationId Int
 
   pathNodes pathNode[]
 }
