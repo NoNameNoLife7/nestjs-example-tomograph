@@ -22,12 +22,11 @@ export class TestService {
   }
 
   async list(params: TestPaginationDto): Promise<WithPagination<test>> {
-    const { orderBy, where, include, ...otherParams } = params;
+    const { orderBy, where, ...otherParams } = params;
 
     const data: test[] = await this.test.findMany({
       ...otherParams,
       where,
-      include,
       orderBy: { updatedAt: orderBy },
     });
     const count: number = await this.test.count(where);

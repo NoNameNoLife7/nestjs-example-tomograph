@@ -229,8 +229,8 @@ enum Direction {
 }
 
 enum PatientPosition {
-  BocaArriba
-  BocaAbajo
+  DecubitoSupino
+  DecubitoProno
   DePie
   LateralDerecho
   LateralIzquierdo

@@ -4,6 +4,8 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  Max,
+  Min,
 } from 'class-validator';
 
 import { Language } from '@prisma/client';
@@ -12,6 +14,8 @@ import { Transform, Type } from 'class-transformer';
 
 export class CreateSoftwareConfigurationDto {
   @IsNumber()
+  @Min(0)
+  @Max(100)
   brightness: number;
 
   @IsOptional()

@@ -5,14 +5,16 @@ import {
   IsInt,
   IsNotEmpty,
   IsOptional,
+  ValidateIf,
 } from 'class-validator';
 
 import { Direction } from '@prisma/client';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 import { Transform, Type } from 'class-transformer';
+import { BadRequestException } from '@nestjs/common';
 
-export const arrayFreq: number[] = [50, 60];
-export const arraySamp: number[] = [10, 15, 25];
+export const arrayFreq: number[] = [20, 25, 30, 35, 40, 45, 50, 55, 60];
+export const arraySamp: number[] = [15, 20, 25, 30, 35, 40];
 
 export class CreateEquipmentConfigurationDto {
   @IsOptional()

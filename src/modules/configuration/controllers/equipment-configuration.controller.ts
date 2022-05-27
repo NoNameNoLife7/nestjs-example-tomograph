@@ -20,6 +20,7 @@ import {
   EquipmentConfigurationRelation,
   UpdateEquipmentConfigurationDto,
 } from '../dto';
+import { IsIn } from 'class-validator';
 
 @Controller('equipmentConfiguration')
 export class EquipmentConfigurationController {
@@ -73,6 +74,13 @@ export class EquipmentConfigurationController {
   async create(
     @Body() createEquipmentConfigurationDto: CreateEquipmentConfigurationDto,
   ) {
+    const { adjacent, jump } = createEquipmentConfigurationDto;
+    if (adjacent === false) {
+      if (jump && (jump < 1 || jump > 14))
+        throw new BadRequestException(
+          'Error: adjacent is set to false, so jump field is required and it must be between [1-14]!',
+        );
+    }
     const equipmentConfigurationModel: EquipmentConfigurationModel =
       await this.modelService.create(createEquipmentConfigurationDto);
     if (!equipmentConfigurationModel)
