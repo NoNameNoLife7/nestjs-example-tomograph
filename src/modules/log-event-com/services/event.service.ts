@@ -41,6 +41,22 @@ export class EventService {
     return { count, data };
   }
 
+  async listByEventType(
+    params: EventPaginationDto,
+  ): Promise<WithPagination<Model>> {
+    const { orderBy, where, ...otherParams } = params;
+
+    const data = await this.model.findMany({
+      ...otherParams,
+      where,
+      orderBy: { updatedAt: orderBy },
+    });
+
+    const count: number = await this.model.count(where);
+
+    return { count, data };
+  }
+
   create(createEventDto: CreateData): Promise<Model> {
     return this.model.create({ data: createEventDto });
   }

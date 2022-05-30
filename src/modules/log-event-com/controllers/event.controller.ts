@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -38,15 +39,21 @@ export class EventController {
 
   @Get(':id')
   get(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Query() params: EventPaginationDto,
   ): Promise<EventModel | null> {
-    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id, params);
   }
 
   @Get()
   list(
+    @Query() params: EventPaginationDto,
+  ): Promise<WithPagination<EventModel>> {
+    return this.modelService.list(params);
+  }
+
+  @Get('event/eventType')
+  listByEventType(
     @Query() params: EventPaginationDto,
   ): Promise<WithPagination<EventModel>> {
     return this.modelService.list(params);
@@ -63,15 +70,16 @@ export class EventController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Body() updateEventDto: UpdateData,
   ): Promise<EventModel> {
     return this.modelService.update(+id, updateEventDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<EventModel> {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(
+    @Param('id', new ParseIntPipe()) id: string,
+  ): Promise<EventModel> {
     return this.modelService.delete(+id);
   }
 }
