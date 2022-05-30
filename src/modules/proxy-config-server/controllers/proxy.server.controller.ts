@@ -10,6 +10,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import axios, { Method, AxiosRequestConfig } from 'axios';
+import { spawn } from 'child_process';
 
 @Controller('proxy')
 export class ProxyServerController {
@@ -91,13 +92,18 @@ export class ProxyServerController {
   }
 
   @Patch('connections/:id/start')
-  updateModeConnection(
+  async updateModeConnection(
     @Req() request: Request,
     @Body()
     data: {
       mode: 'Recording' | 'Impedance' | 'Calibration' | 'Autocalibration';
     },
   ) {
+    const pythonScript = spawn('py', ['EITProcessing/alexey.py']);
+    console.log(pythonScript);
+    pythonScript.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
     return this.proxy(request, data);
   }
   @Patch('connections/:id/stop')
