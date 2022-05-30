@@ -7,6 +7,7 @@ import {
   HttpException,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -25,8 +26,10 @@ export class RoleController {
   constructor(private readonly modelService: RoleService) {}
 
   @Get(':id')
-  async getById(@Param('id') id: string, @Query() params: RoleRelation) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async getById(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Query() params: RoleRelation,
+  ) {
     const instance = await this.modelService.getById(+id, params);
     if (!instance) throw new NotFoundException();
     return instance;
@@ -47,14 +50,15 @@ export class RoleController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  update(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Body() updateRoleDto: UpdateRoleDto,
+  ) {
     return this.modelService.update(+id, updateRoleDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  delete(@Param('id', new ParseIntPipe()) id: string) {
     return this.modelService.delete(+id);
   }
 }

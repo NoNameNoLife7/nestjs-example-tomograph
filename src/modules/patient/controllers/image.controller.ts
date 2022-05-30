@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -30,8 +31,10 @@ export class ImageController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string, @Query() params: ImageRelation) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  get(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Query() params: ImageRelation,
+  ) {
     return this.getInstanceOr404(+id, params);
   }
 
@@ -51,16 +54,14 @@ export class ImageController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Body() updateImageDto: UpdateImageDto,
   ) {
-    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.update(+id, updateImageDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(@Param('id', new ParseIntPipe()) id: string) {
     return this.modelService.delete(+id);
   }
 }

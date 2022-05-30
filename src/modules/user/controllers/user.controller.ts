@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -23,8 +24,10 @@ export class UserController {
   constructor(private readonly modelService: UserService) {}
 
   @Get(':id')
-  async get(@Param('id') id: string, @Query() params: UserRelation) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async get(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Query() params: UserRelation,
+  ) {
     const instance = await this.modelService.getById(+id, params);
     if (!instance) throw new NotFoundException();
     return instance;
@@ -41,14 +44,15 @@ export class UserController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async update(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return await this.modelService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(@Param('id', new ParseIntPipe()) id: string) {
     return await this.modelService.delete(+id);
   }
 }

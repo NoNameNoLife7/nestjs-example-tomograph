@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -24,8 +25,7 @@ export class CommunicationController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  get(@Param('id', new ParseIntPipe()) id: string) {
     return this.getInstanceOr404(+id);
   }
 
@@ -46,15 +46,14 @@ export class CommunicationController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Body() updateCommunicationDto: UpdateCommunicationDto,
   ) {
     return this.modelService.update(+id, updateCommunicationDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(@Param('id', new ParseIntPipe()) id: string) {
     return this.modelService.delete(+id);
   }
 }

@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -63,10 +64,9 @@ export class EquipmentConfigurationController {
 
   @Get(':id')
   get(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Query() params: EquipmentConfigurationRelation,
   ) {
-    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id, params);
   }
 
@@ -75,12 +75,11 @@ export class EquipmentConfigurationController {
     @Body() createEquipmentConfigurationDto: CreateEquipmentConfigurationDto,
   ) {
     const { adjacent, jump } = createEquipmentConfigurationDto;
-    if (adjacent === false) {
-      if (jump && (jump < 1 || jump > 14))
-        throw new BadRequestException(
-          'Error: adjacent is set to false, so jump field is required and it must be between [1-14]!',
-        );
-    }
+    if (adjacent === false && jump && (jump < 1 || jump > 14))
+      throw new BadRequestException(
+        'Error: adjacent is set to false, so jump field is required and it must be between [1-14]!',
+      );
+
     const equipmentConfigurationModel: EquipmentConfigurationModel =
       await this.modelService.create(createEquipmentConfigurationDto);
     if (!equipmentConfigurationModel)
@@ -90,16 +89,14 @@ export class EquipmentConfigurationController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Body() updateEquipmentConfigurationDto: UpdateEquipmentConfigurationDto,
   ) {
-    if (!+id) throw new BadRequestException('The id must be a number');
     return this.modelService.update(+id, updateEquipmentConfigurationDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(@Param('id', new ParseIntPipe()) id: string) {
     return this.modelService.delete(+id);
   }
 }

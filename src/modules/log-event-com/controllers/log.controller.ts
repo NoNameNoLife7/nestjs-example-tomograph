@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -38,10 +39,9 @@ export class LogController {
 
   @Get(':id')
   get(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Query() params: LogRelation,
   ): Promise<LogModel | null> {
-    if (!+id) throw new BadRequestException('The id must be a number');
     return this.getInstanceOr404(+id, params);
   }
 
@@ -61,15 +61,14 @@ export class LogController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseIntPipe()) id: string,
     @Body() updateLogDto: UpdateData,
   ): Promise<LogModel> {
     return this.modelService.update(+id, updateLogDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<LogModel> {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(@Param('id', new ParseIntPipe()) id: string): Promise<LogModel> {
     return this.modelService.delete(+id);
   }
 }

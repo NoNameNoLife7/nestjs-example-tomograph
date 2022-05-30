@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -46,8 +47,10 @@ export class TestController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string, @Query() params: TestRelation) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  get(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Query() params: TestRelation,
+  ) {
     return this.getInstanceOr404(+id, params);
   }
 
@@ -61,17 +64,18 @@ export class TestController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
+  async update(
+    @Param('id', new ParseIntPipe()) id: string,
+    @Body() updateTestDto: UpdateTestDto,
+  ) {
     const { inclination, position } = updateTestDto;
     this.validateTest(inclination, position);
-    if (!+id) throw new BadRequestException('The id must be a number');
     await this.getInstanceOr404(+id);
     return this.modelService.update(+id, updateTestDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    if (!+id) throw new BadRequestException('The id must be a number');
+  async delete(@Param('id', new ParseIntPipe()) id: string) {
     return this.modelService.delete(+id);
   }
 
