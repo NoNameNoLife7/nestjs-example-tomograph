@@ -108,11 +108,22 @@ export class ProxyServerController {
       mode: 'Recording' | 'Impedance' | 'Calibration' | 'Autocalibration';
     },
   ) {
-    const pythonScript = spawn('py', ['EITProcessing/alexey.py']);
-    console.log(pythonScript);
+    const pythonScript = spawn('py', [
+      'EITProcessing/alexey.py',
+      ` --connection "stream.bin"`,
+      ` --out "ws//localhost:5001"`
+    ]);
+
     pythonScript.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
+    pythonScript.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+    pythonScript.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+
     return this.proxy(request, data);
   }
   @Patch('connections/:id/stop')
