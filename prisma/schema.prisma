@@ -153,7 +153,7 @@ model event {
   event       String   @unique
   description String?
 
-  eventType EventType @default(OtroEventoQueSeConsidereDeInteres)
+  eventType EventType @default(OTRO_EVENTO_QUE_SE_CONSIDERE_DE_INTERES)
 
   logs log[]
 
@@ -229,23 +229,23 @@ enum Direction {
 }
 
 enum PatientPosition {
-  DecubitoSupino
-  DecubitoProno
-  DePie
-  LateralDerecho
-  LateralIzquierdo
-  Sentado
+  DECUBITO_SUPINO
+  DECUBITO_PRONO
+  DE_PIE
+  LATERAL_DERECHO
+  LATERAL_IZQUIERDO
+  SENTADO
 }
 
 enum EventType {
-  Respiratorio
-  Cardiocirculatorios
-  Otros
-  Procederes
-  VentilacionMecanica
-  CambiosDeModalidadFania
-  CambiosPostulares
-  Medicamentos
-  SufractantesPulmonares
-  OtroEventoQueSeConsidereDeInteres
+  RESPIRATORIO
+  CARDIO_CIRCULATORIOS
+  OTROS
+  PROCEDERES
+  VENTILACION_MECANICA
+  CAMBIOS_DE_MODALIDAD_FANIA
+  CAMBIOS_POSTULARES
+  MEDICAMENTOS
+  SUFRACTANTES_PULMONARES
+  OTRO_EVENTO_QUE_SE_CONSIDERE_DE_INTERES
 }

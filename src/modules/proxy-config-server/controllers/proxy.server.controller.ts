@@ -8,9 +8,15 @@ import {
   Req,
   Patch,
   Delete,
+  UseFilters,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import axios, { Method, AxiosRequestConfig } from 'axios';
 import { spawn } from 'child_process';
+
+function proxyServer(e: any) {
+  if (e instanceof Error) throw new InternalServerErrorException(e);
+}
 
 @Controller('proxy')
 export class ProxyServerController {
@@ -24,7 +30,10 @@ export class ProxyServerController {
       };
       return (await axios.request(axiosConfig)).data;
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw new InternalServerErrorException(
+        'The hardware service server is not running!',
+      );
     }
   }
 

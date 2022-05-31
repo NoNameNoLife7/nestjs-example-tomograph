@@ -82,33 +82,33 @@ export class TestController {
   private validateTest(inclination: number, position: PatientPosition) {
     let message: string | undefined;
     if (
-      position === PatientPosition.Sentado &&
+      position === PatientPosition.SENTADO &&
       ![90, 120].includes(inclination)
     )
       message =
         'If the patient is siting down, then the Inclination must be only one of the followings: 90 or 120';
 
     if (
-      (position === PatientPosition.DecubitoSupino ||
-        position === PatientPosition.LateralIzquierdo) &&
+      (position === PatientPosition.DECUBITO_SUPINO ||
+        position === PatientPosition.LATERAL_IZQUIERDO) &&
       ![-20, 0, 20, 30, 45].includes(inclination)
     )
       message =
         'If the patient is facing up or on the left side, then the inclination must be only one of the followings: -20, 0, 20, 30 or 45';
 
     if (
-      position === PatientPosition.DecubitoProno &&
+      position === PatientPosition.DECUBITO_PRONO &&
       ![-20, 0].includes(inclination)
     )
       message =
         'If the patient is facing down, then the inclination must be only one of the followings: -20 or 0';
 
-    if (position === PatientPosition.DePie && ![90].includes(inclination))
+    if (position === PatientPosition.DE_PIE && ![90].includes(inclination))
       message =
         'If the patient is standing up, then the inclination must be only: -90';
 
     if (
-      position === PatientPosition.LateralDerecho &&
+      position === PatientPosition.LATERAL_DERECHO &&
       ![-20, 0, 20].includes(inclination)
     )
       message =
