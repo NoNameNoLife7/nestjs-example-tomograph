@@ -8,15 +8,12 @@ import {
   Req,
   Patch,
   Delete,
-  UseFilters,
   InternalServerErrorException,
+  Param,
+  HttpException,
 } from '@nestjs/common';
 import axios, { Method, AxiosRequestConfig } from 'axios';
 import { spawn } from 'child_process';
-
-function proxyServer(e: any) {
-  if (e instanceof Error) throw new InternalServerErrorException(e);
-}
 
 @Controller('proxy')
 export class ProxyServerController {
@@ -102,29 +99,31 @@ export class ProxyServerController {
 
   @Patch('connections/:id/start')
   async updateModeConnection(
+    @Param('id') id: string,
     @Req() request: Request,
     @Body()
     data: {
       mode: 'Recording' | 'Impedance' | 'Calibration' | 'Autocalibration';
     },
   ) {
-    const pythonScript = spawn('py', [
-      'EITProcessing/alexey.py',
-      ` --connection "stream.bin"`,
-      ` --out "ws//localhost:5001"`
-    ]);
+    try {
+      //   const arrayArgs = ['EITProcessing/alexey.py', `--connection ${id}`];
+      //   const pythonScript = spawn('py', arrayArgs);
+      //   //return pythonScript;
+      //   pythonScript.stdout.on('data', (data) => {
+      //     console.log(`stdout: ${data}`);
+      //   });
+      //   pythonScript.stderr.on('data', (data) => {
+      //     console.error(`stderr: ${data}`);
+      //   });
+      //   pythonScript.on('close', (code) => {
+      //     console.log(`child process exited with code ${code}`);
+      //   });
 
-    pythonScript.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-    pythonScript.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-    });
-    pythonScript.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
-    });
-
-    return this.proxy(request, data);
+      return this.proxy(request, data);
+    } catch (e) {
+      throw new HttpException('There ...', 500);
+    }
   }
   @Patch('connections/:id/stop')
   stopModeConnection(@Req() request: Request, @Body() data: any) {
