@@ -107,22 +107,24 @@ export class ProxyServerController {
     },
   ) {
     try {
-      //   const arrayArgs = ['EITProcessing/alexey.py', `--connection ${id}`];
-      //   const pythonScript = spawn('py', arrayArgs);
-      //   //return pythonScript;
-      //   pythonScript.stdout.on('data', (data) => {
-      //     console.log(`stdout: ${data}`);
-      //   });
-      //   pythonScript.stderr.on('data', (data) => {
-      //     console.error(`stderr: ${data}`);
-      //   });
-      //   pythonScript.on('close', (code) => {
-      //     console.log(`child process exited with code ${code}`);
-      //   });
+      const arrayArgs = ['EITProcessing/alexey.py', `--connection`, id];
+      const pythonScript = spawn('py', arrayArgs);
+      pythonScript.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      pythonScript.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      pythonScript.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+      pythonScript.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+      });
 
       return this.proxy(request, data);
     } catch (e) {
-      throw new HttpException('There ...', 500);
+      throw new HttpException('Error processing python script', 500);
     }
   }
   @Patch('connections/:id/stop')
