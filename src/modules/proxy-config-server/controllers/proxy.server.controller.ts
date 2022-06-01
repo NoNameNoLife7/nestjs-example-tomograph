@@ -28,8 +28,9 @@ export class ProxyServerController {
       return (await axios.request(axiosConfig)).data;
     } catch (e) {
       console.log(e);
-      throw new InternalServerErrorException(
-        'The hardware service server is not running!',
+      throw new HttpException(
+        'Error communicating with hardware service!',
+        503,
       );
     }
   }
