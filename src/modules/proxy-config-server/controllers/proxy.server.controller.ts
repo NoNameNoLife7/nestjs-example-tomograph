@@ -1,18 +1,17 @@
 import {
-  Request,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpException,
+  Param,
+  Patch,
   Post,
   Put,
   Req,
-  Patch,
-  Delete,
-  InternalServerErrorException,
-  Param,
-  HttpException,
+  Request,
 } from '@nestjs/common';
-import axios, { Method, AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, Method } from 'axios';
 import { spawn } from 'child_process';
 
 @Controller('proxy')
@@ -27,7 +26,6 @@ export class ProxyServerController {
       };
       return (await axios.request(axiosConfig)).data;
     } catch (e) {
-      console.log(e);
       throw new HttpException(
         'Error communicating with hardware service!',
         503,
