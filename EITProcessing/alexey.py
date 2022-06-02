@@ -13,6 +13,9 @@ from argparse import ArgumentParser
 import sys
 import math
 import neuronic_eit_labview as nel
+import io
+from PIL import Image
+from PIL.PngImagePlugin import PngInfo
 
 
 def _print(frame: list):
@@ -29,7 +32,7 @@ def _print_frames(frames):
 
 
 def _process(frame: list, rate):
-    frame = np.array(frame, dtype=np.float)
+    frame = np.array(frame, dtype=float)
     frame = np.reshape(frame, newshape=(math.floor(math.sqrt(frame.size)), -1))
     try:
         image, tidal_img, area, breathing_rate, scale_min, scale_max = nel.tomograph_iteration(
@@ -47,14 +50,41 @@ def _process(frame: list, rate):
         print("[ProcError]: ", e)
 
 
+def _send_image(ws: WebSocketApp, image: Image, metadata: dict = None):
+    try:
+        image = np.asarray(image)
+        image[np.isnan(image)] = 0
+        image[image > 1] = 1
+        image = 255 * image
+        image = Image.fromarray(image.astype(int))
+        info = PngInfo()
+        if isinstance(metadata, dict):
+            for key, value in metadata.items():
+                info.add_text(key, value)
+
+        with io.BytesIO() as mem:
+            image.save(mem, format='PNG', pnginfo=info)
+            mem.seek(0)
+            ws.send(mem.read(), opcode=0x2)
+    except Exception as e:
+        print("[ImgError]: ", e)
+
+
 def _process_frames(frames, ws: WebSocketApp, rate=20):
     nel.setup(args=(rate,))
-    for frame in frames:
+    for idx, frame in enumerate(frames):
         result = _process(frame, rate)
+        image = result.pop('image')
+        tidal_img = result.pop('tidal_img')
+        result["idx"] = idx
         txt = json.dumps(result)
         print(txt)
         print('-------------------------------------------------------------------------------------------------------')
         ws.send(txt)
+        _send_image(ws, image,
+                    metadata={"Type": "Image", "Frame": str(idx)})
+        _send_image(ws, tidal_img,
+                    metadata={"Type": "Tidal Image", "Frame": str(idx)})
 
 
 def _consume(queue: Queue):

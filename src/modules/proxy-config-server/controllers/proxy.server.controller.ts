@@ -118,7 +118,7 @@ export class ProxyServerController {
         `--connection`,
         id,
         '--out',
-        'ws://localhost:3003',
+        'localhost:3003',
       ];
       const pythonScript = spawn('py', arrayArgs);
       pythonScript.stdout.on('data', (data) => {
