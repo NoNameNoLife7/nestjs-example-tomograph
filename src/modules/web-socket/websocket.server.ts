@@ -26,7 +26,7 @@ export class WebsocketServer
     this.logger.log('Initialized!');
   }
   handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected ${client.id}!`);
+    this.logger.log(`Client connected!`);
   }
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected!`);

@@ -14,6 +14,8 @@ import {
 import axios, { AxiosRequestConfig, Method } from 'axios';
 import { spawn } from 'child_process';
 
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 @Controller('proxy')
 export class ProxyServerController {
   async proxy(request: Request, data: any) {
@@ -92,7 +94,12 @@ export class ProxyServerController {
     return this.proxy(request, data);
   }
   @Get('connections/:id/snr')
-  getSNR(@Req() request: Request, @Body() data: any) {
+  async getSNR(
+    @Param('id') id: string,
+    @Req() request: Request,
+    @Body() data: any,
+  ) {
+    await delay(2500);
     return this.proxy(request, data);
   }
 
@@ -106,7 +113,13 @@ export class ProxyServerController {
     },
   ) {
     try {
-      const arrayArgs = ['EITProcessing/alexey.py', `--connection`, id];
+      const arrayArgs = [
+        'EITProcessing/alexey.py',
+        `--connection`,
+        id,
+        '--out',
+        'ws://localhost:3003',
+      ];
       const pythonScript = spawn('py', arrayArgs);
       pythonScript.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
