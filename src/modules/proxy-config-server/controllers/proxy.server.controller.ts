@@ -122,9 +122,8 @@ export class ProxyServerController {
       ];
       const pythonScript = spawn('py', arrayArgs);
       pythonScript.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-      });
-      pythonScript.stdout.on('data', (data) => {
+        console.log(`data prototi[e] ${data._prot}`);
+        console.log(`typeof ${data}`);
         console.log(`stdout: ${data}`);
       });
       pythonScript.stderr.on('data', (data) => {

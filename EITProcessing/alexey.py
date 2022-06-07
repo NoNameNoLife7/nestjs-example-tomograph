@@ -81,10 +81,10 @@ def _process_frames(frames, ws: WebSocketApp, rate=20):
         print(txt)
         print('-------------------------------------------------------------------------------------------------------')
         ws.send(txt)
-        _send_image(ws, image,
-                    metadata={"Type": "Image", "Frame": str(idx)})
-        _send_image(ws, tidal_img,
-                    metadata={"Type": "Tidal Image", "Frame": str(idx)})
+        #_send_image(ws, image,
+        #            metadata={"Type": "Image", "Frame": str(idx)})
+        #_send_image(ws, tidal_img,
+        #            metadata={"Type": "Tidal Image", "Frame": str(idx)})
 
 
 def _consume(queue: Queue):
@@ -227,7 +227,7 @@ def display(http_url: str,
 
     # Replace processing down here
     if out_url:
-        out_ws = WebSocketApp(f'ws://{out_url}',
+        out_ws = WebSocketApp(f'ws://localhost:3003/',
                               on_error=on_error)
         Thread(target=out_ws.run_forever, daemon=True).start()
         _process_frames(frames, out_ws, rate=rate)

@@ -25,15 +25,18 @@ export class WebsocketServer
   afterInit(server: Server) {
     this.logger.log('Initialized!');
   }
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client?: Socket, ...args: any[]) {
     this.logger.log(`Client connected!`);
   }
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client?: Socket) {
     this.logger.log(`Client disconnected!`);
   }
 
   @SubscribeMessage('connections')
-  handleMessage(client: Socket, text: string): WsResponse<String> {
+  handleMessage(client: any, text: string): WsResponse<String> {
+    console.log('llego');
+    console.log(client);
+
     return { event: 'msgtToClient', data: 'Hello' };
   }
 
