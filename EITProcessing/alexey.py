@@ -1,3 +1,5 @@
+import opcode
+from xml.etree.ElementTree import tostring
 import numpy as np
 import requests
 from contextlib import closing
@@ -25,26 +27,35 @@ def _print(frame: list):
 
 
 def _print_frames(frames):
-    np.set_printoptions(precision=2, threshold=sys.maxsize, suppress=True, linewidth=sys.maxsize)
+    np.set_printoptions(
+        precision=2, threshold=sys.maxsize, suppress=True, linewidth=sys.maxsize
+    )
     for frame in frames:
         _print(frame)
-        print('-------------------------------------------------------------------------------------------------------')
+        print(
+            "-------------------------------------------------------------------------------------------------------"
+        )
 
 
 def _process(frame: list, rate):
     frame = np.array(frame, dtype=float)
     frame = np.reshape(frame, newshape=(math.floor(math.sqrt(frame.size)), -1))
     try:
-        image, tidal_img, area, breathing_rate, scale_min, scale_max = nel.tomograph_iteration(
-            frame, rate=rate, Nrow=2, Ncol=2
-        )
+        (
+            image,
+            tidal_img,
+            area,
+            breathing_rate,
+            scale_min,
+            scale_max,
+        ) = nel.tomograph_iteration(frame, rate=rate, Nrow=2, Ncol=2)
         return {
             "image": image,
             "tidal_img": tidal_img,
             "area": area,
             "breathing_rate": breathing_rate,
             "scale_min": scale_min,
-            "scale_max": scale_max
+            "scale_max": scale_max,
         }
     except Exception as e:
         print("[ProcError]: ", e)
@@ -63,9 +74,27 @@ def _send_image(ws: WebSocketApp, image: Image, metadata: dict = None):
                 info.add_text(key, value)
 
         with io.BytesIO() as mem:
-            image.save(mem, format='PNG', pnginfo=info)
+            image.save(mem, format="PNG", pnginfo=info)
             mem.seek(0)
-            ws.send(mem.read(), opcode=0x2)
+            image.fromarray()
+            data = mem.read()
+            array = np.asarray(image)
+
+            image.fromarray()
+            
+            print("this is our data", data)
+            print("this is our array", array)
+            
+            txt = json.dumps({
+                "event": "connections",
+                "data": data 
+            })
+            print(txt)
+            print(
+                "-------------------------------------------------------------------------------------------------------"
+            )
+            ws.send(txt, opcode=0x2)
+            #ws.send(mem.read(), opcode=0x2)
     except Exception as e:
         print("[ImgError]: ", e)
 
@@ -74,17 +103,22 @@ def _process_frames(frames, ws: WebSocketApp, rate=20):
     nel.setup(args=(rate,))
     for idx, frame in enumerate(frames):
         result = _process(frame, rate)
-        image = result.pop('image')
-        tidal_img = result.pop('tidal_img')
+        image = result.pop("image")
+        tidal_img = result.pop("tidal_img")
         result["idx"] = idx
-        txt = json.dumps(result)
+        txt = json.dumps({
+            "event": "connections",
+            "data": result
+        })
         print(txt)
-        print('-------------------------------------------------------------------------------------------------------')
+        print(
+            "-------------------------------------------------------------------------------------------------------"
+        )
         ws.send(txt)
-        #_send_image(ws, image,
-        #            metadata={"Type": "Image", "Frame": str(idx)})
-        #_send_image(ws, tidal_img,
-        #            metadata={"Type": "Tidal Image", "Frame": str(idx)})
+        _send_image(ws, image,
+                    metadata={"Type": "Image", "Frame": str(idx)})
+        _send_image(ws, tidal_img,
+                    metadata={"Type": "Tidal Image", "Frame": str(idx)})
 
 
 def _consume(queue: Queue):
@@ -99,8 +133,8 @@ def _stream(url: str):
     while True:
         try:
             with closing(requests.get(url, stream=True)) as r:
-                lines = iterdecode(r.iter_lines(), 'utf-8')
-                reader = csv.reader(lines, delimiter=',', quotechar='"')
+                lines = iterdecode(r.iter_lines(), "utf-8")
+                reader = csv.reader(lines, delimiter=",", quotechar='"')
                 next(reader)  # Skip header
                 for row in reader:
                     yield row[1:]
@@ -115,7 +149,7 @@ def _stream(url: str):
 def _is_recording(url: str, timeout):
     try:
         obj = requests.get(url, timeout=timeout).json()
-        return obj['Mode'] == 'Recording'
+        return obj["Mode"] == "Recording"
     except TimeoutError:
         return False
 
@@ -154,9 +188,9 @@ def _poll_frames(url: str, interval: float, run: Event):
             return
         try:
             obj = requests.get(url, timeout=interval / 2).json()
-            if frame_id < obj['Id']:
-                queue.put(obj['Data'])
-                frame_id = obj['Id']
+            if frame_id < obj["Id"]:
+                queue.put(obj["Data"])
+                frame_id = obj["Id"]
         except TimeoutError:
             pass
         except Exception as e:
@@ -168,19 +202,21 @@ def _poll_frames(url: str, interval: float, run: Event):
     return _consume(queue)
 
 
-def display(http_url: str,
-            ws_url: str,
-            out_url: str,
-            cid: str,
-            stream: bool,
-            poll_freq: float,
-            rate: float):
+def display(
+    http_url: str,
+    ws_url: str,
+    out_url: str,
+    cid: str,
+    stream: bool,
+    poll_freq: float,
+    rate: float,
+):
     run = Event()
     queue = None
     ws = None
 
     def on_open(ws):
-        if _is_recording(f'http://{http_url}/connections/{cid}', timeout=0.1):
+        if _is_recording(f"http://{http_url}/connections/{cid}", timeout=0.1):
             run.set()
         else:
             run.clear()
@@ -191,44 +227,47 @@ def display(http_url: str,
     def on_event(ws, message):
         obj = json.loads(message)
         name, obj = next(iter(obj.items()))
-        if name == 'DataReceived':
-            frame = obj['buffer']["Data"]
+        if name == "DataReceived":
+            frame = obj["buffer"]["Data"]
             queue and queue.put(frame)
-        elif name == 'Started':
+        elif name == "Started":
             run.set()
-        elif name == 'Stopped':
+        elif name == "Stopped":
             run.clear()
             if queue is not None:
                 queue.put(None)
                 queue.task_done()
 
     if http_url and stream:
-        frames = _stream(f'http://{http_url}/connections/{cid}/stream')
+        frames = _stream(f"http://{http_url}/connections/{cid}/stream")
     elif http_url and poll_freq > 0:
         interval = 1 / poll_freq
         if ws_url:
-            ws = WebSocketApp(f'ws://{ws_url}',
-                              on_open=on_open,
-                              on_error=on_error,
-                              on_message=on_event)
+            ws = WebSocketApp(
+                f"ws://{ws_url}",
+                on_open=on_open,
+                on_error=on_error,
+                on_message=on_event,
+            )
             Thread(target=ws.run_forever, daemon=True).start()
         else:
-            run = _check_connection(url=f'http://{http_url}/connections/{cid}', interval=interval)
-        frames = _poll_frames(f'http://{http_url}/connections/{cid}/buffer', interval=interval, run=run)
+            run = _check_connection(
+                url=f"http://{http_url}/connections/{cid}", interval=interval
+            )
+        frames = _poll_frames(
+            f"http://{http_url}/connections/{cid}/buffer", interval=interval, run=run
+        )
     elif ws_url:
         queue = Queue()
-        ws = WebSocketApp(f'ws://{ws_url}',
-                          on_error=on_error,
-                          on_message=on_event)
+        ws = WebSocketApp(f"ws://{ws_url}", on_error=on_error, on_message=on_event)
         Thread(target=ws.run_forever, daemon=True).start()
         frames = _consume(queue)
     else:
-        raise Exception('Nothing to display')
+        raise Exception("Nothing to display")
 
     # Replace processing down here
     if out_url:
-        out_ws = WebSocketApp(f'ws://localhost:3003/',
-                              on_error=on_error)
+        out_ws = WebSocketApp(f"ws://{out_url}", on_error=on_error)
         Thread(target=out_ws.run_forever, daemon=True).start()
         _process_frames(frames, out_ws, rate=rate)
     else:
@@ -237,33 +276,64 @@ def display(http_url: str,
     ws is not None and ws.close()
 
 
-def display_forever(http_url: str,
-                    ws_url: str,
-                    out_url: str,
-                    cid: str,
-                    stream: bool,
-                    poll_freq: float,
-                    rate: float):
+def display_forever(
+    http_url: str,
+    ws_url: str,
+    out_url: str,
+    cid: str,
+    stream: bool,
+    poll_freq: float,
+    rate: float,
+):
     while True:
-        display(http_url=http_url,
-                ws_url=ws_url,
-                out_url=out_url,
-                cid=cid,
-                stream=stream,
-                poll_freq=poll_freq,
-                rate=rate)
+        display(
+            http_url=http_url,
+            ws_url=ws_url,
+            out_url=out_url,
+            cid=cid,
+            stream=stream,
+            poll_freq=poll_freq,
+            rate=rate,
+        )
 
 
-if __name__ == '__main__':
-    parser = ArgumentParser(description='Display received EIT data frames.')
-    parser.add_argument('--http', type=str, default='localhost:8348/api', help='Base URL of the HTTP server.')
-    parser.add_argument('--ws', type=str, default='localhost:8348/ws/connections', help='Base URL of the Websocket server.')
-    parser.add_argument('--out', type=str, help='Base URL of the output Websocket server.')
-    parser.add_argument('--connection', required=True, type=str, help='ID of the connection.')
-    parser.add_argument('--stream', action='store_true', help='Try to receive frames through the streaming endpoint.')
-    parser.add_argument('--rate', type=float, default=20, help='The frame rate.')
-    parser.add_argument('--poll', type=float, default=0, help='Poll the current frame with a fixed frequency.')
-    parser.add_argument('--repeat', action='store_true', help='Restart listening after finishing recording.')
+if __name__ == "__main__":
+    parser = ArgumentParser(description="Display received EIT data frames.")
+    parser.add_argument(
+        "--http",
+        type=str,
+        default="localhost:8348/api",
+        help="Base URL of the HTTP server.",
+    )
+    parser.add_argument(
+        "--ws",
+        type=str,
+        default="localhost:8348/ws/connections",
+        help="Base URL of the Websocket server.",
+    )
+    parser.add_argument(
+        "--out", type=str, help="Base URL of the output Websocket server."
+    )
+    parser.add_argument(
+        "--connection", required=True, type=str, help="ID of the connection."
+    )
+    parser.add_argument(
+        "--stream",
+        action="store_true",
+        help="Try to receive frames through the streaming endpoint.",
+    )
+    parser.add_argument("--rate", type=float, default=20, help="The frame rate.")
+    parser.add_argument(
+        "--poll",
+        type=float,
+        default=0,
+        help="Poll the current frame with a fixed frequency.",
+    )
+    parser.add_argument(
+        "--repeat",
+        action="store_true",
+        help="Restart listening after finishing recording.",
+    )
     args = parser.parse_args()
 
     finished = Event()
@@ -271,26 +341,30 @@ if __name__ == '__main__':
     def display_and_exit():
         try:
             if args.repeat:
-                display_forever(http_url=args.http,
-                                ws_url=args.ws,
-                                out_url=args.out,
-                                cid=args.connection,
-                                stream=args.stream,
-                                poll_freq=args.poll,
-                                rate=args.rate)
+                display_forever(
+                    http_url=args.http,
+                    ws_url=args.ws,
+                    out_url=args.out,
+                    cid=args.connection,
+                    stream=args.stream,
+                    poll_freq=args.poll,
+                    rate=args.rate,
+                )
             else:
-                display(http_url=args.http,
-                        ws_url=args.ws,
-                        out_url=args.out,
-                        cid=args.connection,
-                        stream=args.stream,
-                        poll_freq=args.poll,
-                        rate=args.rate)
+                display(
+                    http_url=args.http,
+                    ws_url=args.ws,
+                    out_url=args.out,
+                    cid=args.connection,
+                    stream=args.stream,
+                    poll_freq=args.poll,
+                    rate=args.rate,
+                )
         finally:
             finished.set()
 
     def read_loop():
-        print('Processing frames...')
+        print("Processing frames...")
         sys.stdin.read()
         finished.set()
 
@@ -298,6 +372,4 @@ if __name__ == '__main__':
     Thread(target=read_loop, daemon=True).start()
 
     finished.wait()
-    print('DONE!')
-
-
+    print("DONE!")

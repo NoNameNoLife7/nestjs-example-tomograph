@@ -53,8 +53,8 @@ el_dist = 1
 step = 1
 # mesh_obj, el_pos = mesh.layer_circle()
 mesh_obj, el_pos = mesh.create(16, h0=0.1, fd=thorax)
-mesh_points = mesh_obj['node']
-mesh_triangles = mesh_obj['element']
+mesh_points = mesh_obj["node"]
+mesh_triangles = mesh_obj["element"]
 ex_mat = eit_scan_lines(16, el_dist)  # estimulation
 
 image_x_pixels = 64
@@ -86,23 +86,25 @@ def setup(args):
 
     # Initialize the buffer
     rate = args[0]
-    Nbuff = rate*10
+    Nbuff = rate * 10
     frames_buffer = np.zeros(shape=(208, Nbuff), dtype=float)
     images_buffer = np.zeros(shape=(Nbuff, image_x_pixels, image_y_pixels))
 
     # Initialize the eit method
     t1 = time()
     if INVERSE_SOLUTION_METHOD == 0:
-        eit = bp.BP(mesh_obj, el_pos, ex_mat=ex_mat, step=step, parser='std')
-        eit.setup(weight='none')
+        eit = bp.BP(mesh_obj, el_pos, ex_mat=ex_mat, step=step, parser="std")
+        eit.setup(weight="none")
     elif INVERSE_SOLUTION_METHOD == 1:
-        eit = jac.JAC(mesh_obj, el_pos, ex_mat=ex_mat, step=step, perm=1., parser='std')
-        eit.setup(p=0.5, lamb=0.01, method='kotre')
+        eit = jac.JAC(
+            mesh_obj, el_pos, ex_mat=ex_mat, step=step, perm=1.0, parser="std"
+        )
+        eit.setup(p=0.5, lamb=0.01, method="kotre")
     # eit = greit.GREIT(mesh_obj, el_pos, ex_mat=ex_mat, step=step, parser='std')
     # eit.setup(p=0.50, lamb=0.001)
 
     t2 = time()
-    print("Create EIT setup", t2-t1)
+    print("Create EIT setup", t2 - t1)
 
 
 def define_matrix():
@@ -118,9 +120,14 @@ def define_matrix():
     x = np.linspace(mesh_x_min, mesh_x_max, image_x_pixels, endpoint=True)
     # y = np.linspace(mesh_y_min, mesh_y_max, image_y_pixels, endpoint=True)
     y_center = (mesh_y_max + mesh_y_min) / 2
-    y = np.linspace(y_center - mesh_width/2, y_center + mesh_width/2, image_y_pixels, endpoint=True)
+    y = np.linspace(
+        y_center - mesh_width / 2,
+        y_center + mesh_width / 2,
+        image_y_pixels,
+        endpoint=True,
+    )
 
-    points = np.array(np.meshgrid(x, y)).reshape((2, 64*64)).T
+    points = np.array(np.meshgrid(x, y)).reshape((2, 64 * 64)).T
     print(points.shape)
     return points
 
@@ -131,6 +138,7 @@ interpolation_points = define_matrix()
 def calc_image(frame, reference):
     global ex_mat, mesh_obj, eit, fig, ax, INVERSE_SOLUTION_METHOD
     from time import time, sleep
+
     t0 = time()  # start
 
     if INVERSE_SOLUTION_METHOD == 0:
@@ -144,12 +152,19 @@ def calc_image(frame, reference):
     t1 = time()  # solved inverse
 
     # print(mesh_points.shape, ds_n.shape, interpolation_points.shape)
-    interpolation_values = griddata(mesh_points, ds_n, interpolation_points, method='cubic')
+    interpolation_values = griddata(
+        mesh_points, ds_n, interpolation_points, method="cubic"
+    )
     # print(interpolation_values.shape)
-    image = interpolation_values.reshape((64, 64,))
+    image = interpolation_values.reshape(
+        (
+            64,
+            64,
+        )
+    )
     t2 = time()
-    print('solve inverse:', t1-t0)
-    print('create image', t2-t1)
+    print("solve inverse:", t1 - t0)
+    print("create image", t2 - t1)
     return image
 
 
@@ -196,7 +211,7 @@ def calc_max_and_min_prominence(frames):
 
 
 def get_prominence(x, inverse=False):
-    x = x if not inverse else x*-1
+    x = x if not inverse else x * -1
     peaks, _ = find_peaks(x)
     prominences = peak_prominences(x, peaks)[0]
     return peaks, prominences
@@ -208,13 +223,18 @@ def __filter_frame(frames, Nwind):
     breathing_rate : number
     return: array with shape len(frames) - breathing_rate + 1
     """
-    fvd = np.convolve(frames, np.ones(Nwind), 'valid') / Nwind
+    fvd = np.convolve(frames, np.ones(Nwind), "valid") / Nwind
 
     return fvd
 
 
 def filter_frames(frames_buffer, Nwind):
-    result = np.array([__filter_frame(frames_buffer[i, :], Nwind) for i in range(frames_buffer.shape[0])])
+    result = np.array(
+        [
+            __filter_frame(frames_buffer[i, :], Nwind)
+            for i in range(frames_buffer.shape[0])
+        ]
+    )
     return result
 
 
@@ -225,9 +245,9 @@ def calc_rois(frame, rows, cols):
     rois = np.zeros((rows, cols))
     for i in range(rows):
         for j in range(cols):
-            row_last = frame.shape[0] if i == rows-1 else (i+1)*square_height
-            col_last = frame.shape[1] if j == cols-1 else (j+1)*square_width
-            square = frame[i*square_height: row_last, j*square_width: col_last]
+            row_last = frame.shape[0] if i == rows - 1 else (i + 1) * square_height
+            col_last = frame.shape[1] if j == cols - 1 else (j + 1) * square_width
+            square = frame[i * square_height : row_last, j * square_width : col_last]
             rois[i, j] = np.nansum(square)
 
     return rois
@@ -256,7 +276,9 @@ def from_time_to_buffer_index(x):
     return result
 
 
-def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nrow=None, Ncol=None):
+def tomograph_iteration(
+    frame, Nbuff=None, threshold_period=None, rate=None, Nrow=None, Ncol=None
+):
     """
     Parameters
     ----------
@@ -279,10 +301,7 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
         tidal_image : matrix
             tidal image
     """
-    global p, t, frames_buffer, images_buffer, last_max_frame_index, last_ref_frame_index, \
-        img, min_prominence, max_prominence, \
-        min_average, max_average, ref_frame, max_frame, min_count, max_count, tidal_image, \
-        norm_min, norm_max, norm_max_temp, ref_image, max_image
+    global p, t, frames_buffer, images_buffer, last_max_frame_index, last_ref_frame_index, img, min_prominence, max_prominence, min_average, max_average, ref_frame, max_frame, min_count, max_count, tidal_image, norm_min, norm_max, norm_max_temp, ref_image, max_image
 
     threshold_period = rate
     Nbuff = frames_buffer.shape[1]
@@ -292,7 +311,7 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
 
     image, refall, area = None, None, None
     if p < Nbuff - 1:
-        p = p+1
+        p = p + 1
     t = t + 1
 
     # shift frames and images buffer
@@ -300,12 +319,12 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
     #     frames_buffer[:, : -1] = frames_buffer[:, 1:]
     #     images_buffer[0: Nbuff-1] = images_buffer[1:Nbuff]
     # store the new frame
-    frames_buffer[:, : -1] = frames_buffer[:, 1:]
-    images_buffer[0: Nbuff - 1] = images_buffer[1:Nbuff]
+    frames_buffer[:, :-1] = frames_buffer[:, 1:]
+    images_buffer[0 : Nbuff - 1] = images_buffer[1:Nbuff]
     frames_buffer[:, -1] = frame
 
     new_max = False  # if there is a new tidal image
-    new_ref = False   # if there is a new ref image
+    new_ref = False  # if there is a new ref image
     breathing_rate = 0
 
     if ref_frame is None:
@@ -326,17 +345,32 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
                 last_ref_frame_index = index_in_time(minima)
                 ref_frame = filtered_frames[:, minima]
                 new_ref = True
-                print("Iteration:", t, "new reference in time index:", last_ref_frame_index)
-            elif t - p + minima + floor(Nwind / 2) - last_ref_frame_index > threshold_period: # and min_average / 5 < pmin:
+                print(
+                    "Iteration:",
+                    t,
+                    "new reference in time index:",
+                    last_ref_frame_index,
+                )
+            elif (
+                t - p + minima + floor(Nwind / 2) - last_ref_frame_index
+                > threshold_period
+            ):  # and min_average / 5 < pmin:
                 min_count = min_count + 1
                 min_average = (pmin + min_average * (min_count - 1)) / min_count
                 last_ref_frame_index = index_in_time(minima)
                 ref_frame = filtered_frames[:, minima]
                 new_ref = True
-                print("Iteration:", t, "new reference in time index:", last_ref_frame_index)
+                print(
+                    "Iteration:",
+                    t,
+                    "new reference in time index:",
+                    last_ref_frame_index,
+                )
         if maxima:
             # pass
-            if t - Nbuff + maxima + floor(Nwind / 2) > last_ref_frame_index: # and max_average / 10 < pmax:
+            if (
+                t - Nbuff + maxima + floor(Nwind / 2) > last_ref_frame_index
+            ):  # and max_average / 10 < pmax:
                 max_count = max_count + 1
                 # new_max = t - Nbuff + maxima - floor(Nwind / 2)
                 new_max = index_in_time(maxima)
@@ -376,7 +410,7 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
     image_rois = calc_rois(image, Nrow, Ncol)
     total_image_rois = np.sum(image_rois)
 
-    area = image_rois.reshape((Ncol*Nrow,)).tolist()
+    area = image_rois.reshape((Ncol * Nrow,)).tolist()
     area = [total_image_rois] + area
     print("area:", area)
 
@@ -389,7 +423,9 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
     image = np.rot90(image) * -1
     image = image.tolist()
 
-    tidal_img = np.zeros((64, 64)) if tidal_image is None else (np.rot90(tidal_image) * -1)
+    tidal_img = (
+        np.zeros((64, 64)) if tidal_image is None else (np.rot90(tidal_image) * -1)
+    )
     tidal_img = tidal_img.tolist()
 
     # scale_min, scale_max = 0, 10
@@ -400,7 +436,7 @@ def tomograph_iteration(frame, Nbuff=None, threshold_period=None, rate=None, Nro
 def clean_frame_data(frame_data):
     frame = np.zeros((16, 13))
     for i in range(16):
-        frame[i] = np.roll(frame_data[i], -(2+i))[0:13]
+        frame[i] = np.roll(frame_data[i], -(2 + i))[0:13]
     # print(frame)
     frame = frame.reshape((208,))
 
@@ -414,8 +450,8 @@ def clean_frame_data(frame_data):
 def clean_frame_data2(frame_data):
     frame = np.zeros((16, 13))
     for i in range(16):
-        frame0 = frame_data[i*16:(i+1)*16]
-        frame0 = np.roll(frame0, -(2+i))[0:13]
+        frame0 = frame_data[i * 16 : (i + 1) * 16]
+        frame0 = np.roll(frame0, -(2 + i))[0:13]
         frame[i] = frame0
     # print(frame)
     frame = frame.reshape((208,))
@@ -434,7 +470,7 @@ def normalize_image(image):
     higher = norm_max
     if higher is None:
         higher = np.nanmax(image)
-    norm_image = (image - lower)/(higher - lower) * 100
+    norm_image = (image - lower) / (higher - lower) * 100
     return norm_image
 
 
@@ -459,6 +495,7 @@ def _test_real_data():
     if SHOW_IMAGE:
         import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
+
         plt.ion()
         fig = plt.figure(figsize=(12, 8))
         gs = GridSpec(2, 2, figure=fig)
@@ -469,7 +506,7 @@ def _test_real_data():
         array = np.zeros(shape=(64, 64), dtype=np.uint8)
         axim = ax0.imshow(array, vmin=0, vmax=1500, cmap="Purples")
         axtid = ax1.imshow(array, vmin=0, vmax=1500, cmap="Purples")
-        axbuffer, = ax2.plot(np.mean(frames_buffer, axis=0))
+        (axbuffer,) = ax2.plot(np.mean(frames_buffer, axis=0))
         fig.colorbar(axim, ax=ax0)
         fig.colorbar(axtid, ax=ax1)
         ax0.set_xlabel("Frame:")
@@ -481,18 +518,19 @@ def _test_real_data():
         print()
         print("Iteration:", i)
 
-        frame = data[i*16:(i+1)*16, 0:16].tolist()
+        frame = data[i * 16 : (i + 1) * 16, 0:16].tolist()
 
-        image, tidal_img, area, breathing_rate, scale_min, scale_max = tomograph_iteration(
-            frame,
-            rate=rate,
-            Nrow=2,
-            Ncol=2
-        )
+        (
+            image,
+            tidal_img,
+            area,
+            breathing_rate,
+            scale_min,
+            scale_max,
+        ) = tomograph_iteration(frame, rate=rate, Nrow=2, Ncol=2)
 
         if SAVE_DATA:
-            data_to_save.append({"iteration": i,
-                                 "areas": area})
+            data_to_save.append({"iteration": i, "areas": area})
 
         image = np.array(image)
         if tidal_img is not None:
@@ -527,12 +565,12 @@ def _test_real_data():
 
             ref_index = from_time_to_buffer_index(last_ref_frame_index)
             if 0 < ref_index < Nbuff:
-                ax2.scatter([ref_index], [frames_curve[ref_index]], c='green')
+                ax2.scatter([ref_index], [frames_curve[ref_index]], c="green")
 
             if last_max_frame_index is not None:
                 max_index = from_time_to_buffer_index(last_max_frame_index)
                 if 0 < ref_index < Nbuff:
-                    ax2.scatter([max_index], [frames_curve[max_index]], c='red')
+                    ax2.scatter([max_index], [frames_curve[max_index]], c="red")
 
             fig.canvas.flush_events()
 
@@ -545,6 +583,7 @@ def _test_real_data():
     print()
     print("OverAll Time:", t4 - t1)
 
+
 #    if SAVE_DATA:
 #        import json
 #        json_data = json.dumps(data_to_save)
@@ -554,6 +593,3 @@ def _test_real_data():
 
 if __name__ == "__main__":
     _test_real_data()
-
-
-

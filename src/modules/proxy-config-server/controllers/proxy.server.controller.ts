@@ -1,5 +1,6 @@
 import {
   Body,
+  ConsoleLogger,
   Controller,
   Delete,
   Get,
@@ -11,6 +12,7 @@ import {
   Req,
   Request,
 } from '@nestjs/common';
+const WebSocket = require('ws');
 import axios, { AxiosRequestConfig, Method } from 'axios';
 import { spawn } from 'child_process';
 
@@ -121,13 +123,17 @@ export class ProxyServerController {
         'localhost:3003',
       ];
       const pythonScript = spawn('py', arrayArgs);
+
       pythonScript.stdout.on('data', (data) => {
-        console.log(`data prototi[e] ${data._prot}`);
-        console.log(`typeof ${data}`);
-        console.log(`stdout: ${data}`);
+        console.log(`[NestJS] -> stdout received from python script`);
+        //console.log(`stdout: ${data}`);
+        console.log(new Array(20).fill('').join('-'));
+        console.log();
       });
       pythonScript.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
+        console.log(`[NestJS] -> stderr received from python script`);
+        console.log(`data ${data}`);
+        console.log(new Array(20).fill('').join('-'));
       });
       pythonScript.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
