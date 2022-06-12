@@ -28,14 +28,17 @@ export class CreatePatientDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   hospitalCode?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   comorbidities?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   diagnostic?: string;
 
   @IsOptional()
@@ -75,7 +78,55 @@ export class PatientPaginationDto extends PaginationDto {
   @Type(() => PatientIncludeDTO)
   include: PatientIncludeDTO;
 
-  where?: any;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  lastName?: string;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  date?: Date;
+
+  @IsOptional()
+  @IsString()
+  hospitalCode?: string;
+
+  @IsOptional()
+  @IsString()
+  comorbidities?: string;
+
+  @IsOptional()
+  @IsString()
+  diagnostic?: string;
+
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  active?: boolean;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  weight?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  size?: number;
+
+  @IsOptional()
+  @IsEnum(Sex)
+  sex?: Sex;
+
+  @IsOptional()
+  @IsEnum(SkinColor)
+  skinColor?: SkinColor;
 }
 
 export class PatientRelation {

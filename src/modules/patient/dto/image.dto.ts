@@ -42,7 +42,20 @@ export class ImagePaginationDto extends PaginationDto {
   @Type(() => ImageIncludeDTO)
   include: ImageIncludeDTO;
 
-  where?: any;
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  date?: Date;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  file?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  testId?: number;
 }
 
 export class ImageRelation {

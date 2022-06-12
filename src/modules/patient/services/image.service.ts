@@ -25,11 +25,16 @@ export class ImageService {
   }
 
   async list(params: ImagePaginationDto): Promise<WithPagination<image>> {
-    const { orderBy, where, include, ...otherParams } = params;
+    const { orderBy, where, include, date, file, testId, ...otherParams } =
+      params;
 
     const data: image[] = await this.image.findMany({
       ...otherParams,
-      where,
+      where: {
+        date,
+        file,
+        testId,
+      },
       include,
       orderBy: { updatedAt: orderBy },
     });

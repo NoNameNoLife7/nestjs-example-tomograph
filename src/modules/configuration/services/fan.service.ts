@@ -21,11 +21,22 @@ export class FanService {
   }
 
   async list(params: FanPaginationDto): Promise<WithPagination<fan>> {
-    const { orderBy, where, include, ...otherParams } = params;
+    const { orderBy, where, include, model, name, protocol, ...otherParams } =
+      params;
 
     const data: fan[] = await this.fan.findMany({
       ...otherParams,
-      where,
+      where: {
+        model: {
+          contains: model,
+        },
+        name: {
+          contains: name,
+        },
+        protocol: {
+          contains: protocol,
+        },
+      },
       include,
       orderBy: { updatedAt: orderBy },
     });

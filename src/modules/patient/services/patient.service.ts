@@ -25,11 +25,47 @@ export class PatientService {
   }
 
   async list(params: PatientPaginationDto): Promise<WithPagination<patient>> {
-    const { orderBy, where, include, ...otherParams } = params;
+    const {
+      orderBy,
+      where,
+      include,
+      firstName,
+      lastName,
+      sex,
+      date,
+      active,
+      comorbidities,
+      diagnostic,
+      hospitalCode,
+      size,
+      skinColor,
+      weight,
+      ...otherParams
+    } = params;
 
     const data: patient[] = await this.patient.findMany({
       ...otherParams,
-      where,
+      where: {
+        firstName: {
+          contains: firstName,
+        },
+        lastName: {
+          contains: lastName,
+        },
+        sex,
+        date,
+        active,
+        comorbidities: {
+          contains: comorbidities,
+        },
+        diagnostic: {
+          contains: diagnostic,
+        },
+        hospitalCode,
+        size,
+        skinColor,
+        weight,
+      },
       include,
       orderBy: { updatedAt: orderBy },
     });

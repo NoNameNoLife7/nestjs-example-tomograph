@@ -34,7 +34,20 @@ export class FanPaginationDto extends PaginationDto {
   @Type(() => FanIncludeDTO)
   include: FanIncludeDTO;
 
-  where?: any;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  model?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  protocol?: string;
 }
 
 export class FanRelation {

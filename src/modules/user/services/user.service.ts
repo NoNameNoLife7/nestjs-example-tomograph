@@ -25,11 +25,25 @@ export class UserService {
   }
 
   async list(params: UserPaginationDto): Promise<WithPagination<user>> {
-    const { orderBy, where, include, ...otherParams } = params;
+    const {
+      orderBy,
+      active,
+      email,
+      where,
+      firstName,
+      lastName,
+      include,
+      ...otherParams
+    } = params;
 
     const data: user[] = await this.user.findMany({
       ...otherParams,
-      where,
+      where: {
+        active,
+        email,
+        firstName,
+        lastName,
+      },
       include,
       orderBy: { updatedAt: orderBy },
     });

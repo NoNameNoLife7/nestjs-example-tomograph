@@ -5,7 +5,6 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WebSocketServerOptions,
   WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
@@ -27,10 +26,12 @@ export class WebsocketServer
     this.logger.log('Initialized!');
   }
   handleConnection(client?: any, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.__proto__}`);
+    let i = 1;
+    this.logger.log(`Client connected: ${i++}`);
   }
   handleDisconnect(client?: Socket) {
-    this.logger.log(`Client disconnected!`);
+    let i = 1;
+    this.logger.log(`Client disconnected: ${i--}`);
   }
 
   @SubscribeMessage('connections')
@@ -38,7 +39,7 @@ export class WebsocketServer
     console.log('Incoming Data:', text);
     //console.log(client);
 
-    return { event: 'msgtToClient', data: 'Hello' };
+    return { event: 'msgtToClient', data: text };
   }
 
   @SubscribeMessage('closeConnection')

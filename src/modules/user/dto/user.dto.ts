@@ -55,5 +55,24 @@ export class UserPaginationDto extends PaginationDto {
   @Type(() => UserIncludeDTO)
   include: UserIncludeDTO;
 
-  where?: any;
+  @IsOptional()
+  @IsEmail()
+  @IsNotEmpty()
+  @IsString()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  lastName?: string;
+
+  @IsOptional()
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
 }

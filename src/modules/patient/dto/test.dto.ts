@@ -3,20 +3,12 @@ import {
   IsEnum,
   IsIn,
   IsInt,
-  IsNotEmpty,
-  IsObject,
   IsOptional,
   IsString,
-  ValidateIf,
-  ValidateNested,
 } from 'class-validator';
 
 import { PatientPosition } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import {
-  CreateEquipmentConfigurationDto,
-  CreateSoftwareConfigurationDto,
-} from 'src/modules/configuration/dto';
 import { BaseIncludeDTO, PaginationDto } from 'src/common/utils';
 
 export const arrayInclination: number[] = [-20, 0, 20, 30, 45, 90, 120];
@@ -80,6 +72,26 @@ export class TestPaginationDto extends PaginationDto {
   @Transform(({ value }) => new TestIncludeDTO(value))
   @Type(() => TestIncludeDTO)
   include: TestIncludeDTO;
+
+  @IsOptional()
+  @IsEnum(PatientPosition)
+  position?: PatientPosition;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  patientId?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsIn(arrayInclination)
+  inclination?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  peep?: number;
 }
 
 export class TestRelation {
